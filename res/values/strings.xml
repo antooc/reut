@@ -9,4 +9,7 @@
     <string name="questions">Questions</string>
     <string name="submit">Submit</string>
 
+    <string name="startup_evaluation">培训效果量化评估</string>
+    <string name="startup_vesion">© 2014 www.peice.com.cn  v2.1</string>
+
 </resources>
