@@ -24,6 +24,14 @@
         </activity>
         
         <activity
+            android:name="com.peice.ATSLogonActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        
+        <activity
             android:name="com.peice.CourseActivity"
             android:label="@string/app_name" >
             <intent-filter>

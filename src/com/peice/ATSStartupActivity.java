@@ -14,7 +14,7 @@ public class ATSStartupActivity extends Activity {
         public void run() {
             Intent intent = new Intent();
 
-            intent.setClass(ATSStartupActivity.this, CourseActivity.class); // enter login activity
+            intent.setClass(ATSStartupActivity.this, ATSLogonActivity.class);
             startActivity(intent);
             finish();
         }
