@@ -20,4 +20,12 @@
     <string name="logon_logingin">正在登录...</string>
     <string name="logon_note">说明：\n\n培测序列号形如 1000020058-CYYDCG，前面的10位数字是帐号，后面的6位字母是密码，密码不区分大小写。</string>
 
+    <string name="fillout_title">填写资料</string>
+    <string name="fillout_name">姓  名：</string>
+    <string name="fillout_sex">性  别：</string>
+    <string name="fillout_man">男  </string>
+    <string name="fillout_woman">女</string>
+    <string name="fillout_email">邮  箱：</string>
+    <string name="fillout_next">下一步</string>
+
 </resources>
