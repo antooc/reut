@@ -3,21 +3,27 @@ package com.peice.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestQuestion extends Question {
+public class TestQuestion {
+	public static final int TYPE_SIGNLE_SELECT = 1;
+	public static final int TYPE_MULTI_SELECT = 2;
+	public static final int TYPE_SHORT_ANSWER = 3;
+	public static final int TYPE_FILL_VACANCY  = 4;
 	
 	String mTrunk; //题干
 	List<String>  mBranches; //题支
 	int   mType; //题型
 	int   mId; //试题的id
+	QuestionGroup mGroup;
 
-	TestQuestion(int id, int type, String trunk, List<String> branches) {
+	TestQuestion(int id, int type, String trunk, List<String> branches, QuestionGroup group) {
 		mId = id;
 		mType = type;
 		mTrunk = trunk;
 		mBranches = branches;
+		mGroup = group;
 	}
 	TestQuestion(int id, int type, String trunk) {
-		this(id, type, trunk, null);
+		this(id, type, trunk, null, null);
 	}
 	
 	public int getId() {
@@ -45,5 +51,13 @@ public class TestQuestion extends Question {
 			mBranches = new ArrayList<String>();
 		mBranches.add(branch);
 		return this;
+	}
+	public TestQuestion setGroup(QuestionGroup g) {
+		mGroup = g;
+		return this;
+	}
+	
+	public QuestionGroup getGroup() {
+		return mGroup;
 	}
 }
