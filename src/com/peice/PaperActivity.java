@@ -1,89 +1,114 @@
 package com.peice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.peice.model.Examinee;
 import com.peice.model.ExamineeManager;
 import com.peice.model.Paper;
-import com.peice.model.Question;
+import com.peice.model.PaperAnswer;
 import com.peice.model.QuestionGroup;
 import com.peice.model.TestQuestion;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
 
-public class PaperActivity extends BaseActivity {
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+
+public class PaperActivity extends Activity implements ViewPager.OnPageChangeListener, QuestionCard.Listner {
 	
 	static final String TAG="PaperActivity";
 	
 	static public final String COURSE_ID = "course_id";
 	static public final String PAPER_ID = "paper_id";
 	static public final String EXAMINEE_ID = "examinee_id";
+	static public final String QUESTION_ID = "question_id";
 	
-	TextView mTitle;
 	TextView mLeftTimes;
-	ViewGroup mPaperContent;
-	ViewGroup mBranchesContainer;
-	TextView mQuestionTrunk;
+	TextView mTitle;
 	Paper    mPaper;
-	QuestionAdapter mQuestionAdapter;
+	Examinee mExaminee;
+	int      mCurrentQuestion;
+	ProgressBar mAnswerProgress;
 	
-	Button mBtnPrev;
-	Button mBtnNext;
-	Button mBtnQuestions; //
-	Button mBtnSubmit;
+	QuestionCard mFrontQuestionCard;
+	QuestionCard mBackQuestionCard;
+	MyPagerAdapter mPagerAdapter;
+	ViewPager    mContentView;
 	
-	static class StackElement {
-		QuestionGroup group;
-		int current;
-		StackElement(QuestionGroup g) {
-			group = g;
-			current = 0;
+	class MyPagerAdapter extends PagerAdapter {
+
+		List<QuestionCard>  mQuestionCardRemovedViews;
+		Map<Integer,QuestionCard>  mQuestionUsingViews;
+		
+		private QuestionCard  getQuestionCard(TestQuestion tq, int poistion) {
+			QuestionCard card = null;
+			if(mQuestionCardRemovedViews != null && mQuestionCardRemovedViews.size() > 0) {
+				card = mQuestionCardRemovedViews.get(0);
+				mQuestionCardRemovedViews.remove(0);
+			}
+			else {
+				card = new QuestionCard(PaperActivity.this, null);
+			}
+			
+			card.init(mPaper, PaperActivity.this);
+			card.setQuestion(tq, poistion);
+			if(mQuestionUsingViews == null)
+				mQuestionUsingViews = new HashMap<Integer, QuestionCard>();
+			mQuestionUsingViews.put(poistion, card);
+			
+			return card;
 		}
-	}
-	
-	StackElement  mQuestionStack[] = new StackElement[10];
-	int  mStackTop = 0;
-	
-	private void push(QuestionGroup g) {
-		if(g.getQuestions() == null || g.getQuestions().size() <= 0)
-			return;
-		StackElement e = new StackElement(g);
-		mQuestionStack[mStackTop++] = e;
-		Question q = g.getQuestions().get(0);
-		if(q != null && q instanceof QuestionGroup) {
-			push((QuestionGroup)q);
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mPaper != null ? mPaper.count() :  0;
 		}
-	}
-	private void push_with_last(QuestionGroup g){
-		if(g.getQuestions() == null || g.getQuestions().size() <= 0)
-			return;
-		StackElement e = new StackElement(g);
-		mQuestionStack[mStackTop++] = e;
-		e.current = g.getQuestions().size() - 1;
-		Question q = g.getQuestions().get(e.current);
-		if(q != null && q instanceof QuestionGroup) {
-			push_with_last((QuestionGroup)q);
+
+		@Override
+		public boolean isViewFromObject(View view, Object data) {
+			// TODO Auto-generated method stub
+			if(view instanceof QuestionCard && ((QuestionCard)view).getQuestion() == data) {
+				return true;
+			}
+			return false;
 		}
-	}
-	private void pop() {
-		mStackTop --;
-	}
-	private StackElement top() {
-		if(mStackTop > 0)
-			return mQuestionStack[mStackTop - 1];
-		return null;
-	}
-	private boolean isStackEmpty() {
-		return mStackTop <= 0;
+		
+		@Override
+		public void destroyItem(View container, int position, Object object) {
+			QuestionCard card = null;
+			if(mQuestionUsingViews != null)
+			{
+				card = mQuestionUsingViews.get(position);
+				mQuestionUsingViews.remove(position);
+			}
+			if(card != null) {
+				if(mQuestionCardRemovedViews == null)
+					mQuestionCardRemovedViews = new ArrayList<QuestionCard>();
+				mQuestionCardRemovedViews.add(card);
+				((ViewGroup)container).removeView(card);
+			}
+		}
+		
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			TestQuestion tq = mPaper.get(position);
+			QuestionCard card = getQuestionCard(tq, position);
+			container.addView(card);
+			return tq;
+		}
+		
 	}
 	
 	
@@ -124,205 +149,44 @@ public class PaperActivity extends BaseActivity {
 		}
 	};
 	
-	private void updateUI() {
-		updateQuestion();
-		mBtnPrev.setEnabled(hasPrev());
-		mBtnNext.setEnabled(hasNext());
-	}
-	
-	private void updateQuestion() {
-		StackElement e = top();
-		if(e == null)
-			return;
-		
-		if(e.group != null) {
-			mTitle.setText(e.group.getTrunk());
-		}
-		
-		Question q = e.group.getQuestions().get(e.current);
-		
-		if(q instanceof TestQuestion) {
-			TestQuestion tq = (TestQuestion)q;
-			mQuestionTrunk.setText(tq.getTrunk());
-			setQuestionBranches(tq);
-		}
-	}
-	
-	private void setQuestionBranches(TestQuestion tq) {
-		mQuestionAdapter = QuestionAdapter.getAdapter(tq);
-		mBranchesContainer.removeAllViews();
-		if(mQuestionAdapter != null) {
-			mQuestionAdapter.getBranchView(mBranchesContainer, getLayoutInflater());
-		}
-		
-	}
-	
-	
-	
-	private void nextQuestion() {
-		
-		StackElement e = top();
-		if(e == null) {
-			//TODO Last
-			return ;
-		}
-		e.current ++;
-		Log.i("==DJJ", "current="+e.current+",size="+e.group.getQuestions().size());
-		if(e.current >= e.group.getQuestions().size()) {
-			pop();
-			nextQuestion();
-		}
-		else {
-			Question q = e.group.getQuestions().get(e.current);
-			Log.i("==DJJ", "Question="+q);
-			if(q instanceof QuestionGroup) {
-				push((QuestionGroup)q);
-			}
-		}
-		
-		updateUI();
-	}
-	
-
-	
-	private void prevQuestion() {
-		StackElement e = top();
-		if(e == null) {
-			//TODO first
-			return;
-		}
-		
-		e.current --;
-		if(e.current < 0) {
-			pop();
-			prevQuestion();
-		}
-		else {
-			Question q = e.group.getQuestions().get(e.current);
-			if(q instanceof QuestionGroup) {
-				push_with_last((QuestionGroup)q);
-			}
-		}
-		updateUI();
-	}
-	
-	private boolean isEmptyQuestionGroup(QuestionGroup g) {
-		if(g.getQuestions().size() <= 0)
-			return true;
-		
-		for(Question q : g.getQuestions()) {
-			if(q instanceof QuestionGroup) {
-				if(!isEmptyQuestionGroup((QuestionGroup)q))
-					return false;
-			}
-			else {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private boolean hasPrev(StackElement e) {
-		int i = e.current - 1;
-		while(i >= 0) {
-			Question q = e.group.getQuestions().get(i);
-			if(q instanceof QuestionGroup) {
-				if(!isEmptyQuestionGroup((QuestionGroup)q)) {
-					return true;
-				}
-			}
-			else {
-				return true;
-			}
-			i --;
-		}
-		return false;
-	}
-	
-	public boolean hasPrev() {
-		int i = mStackTop -1;
-		while(i >= 0) {
-			if(hasPrev(mQuestionStack[i]))
-				return true;
-			i --;
-		}
-		return false;
-	}
-	
-	private boolean hasNext(StackElement e) {
-		int i = e.current + 1;
-		Log.i("==DJJ", "hasNext current="+e.current +",group="+e.group);
-		while(i < e.group.getQuestions().size()) {
-			Question q = e.group.getQuestions().get(i);
-			if(q instanceof QuestionGroup) {
-				if(!isEmptyQuestionGroup((QuestionGroup)q)) {
-					return true;
-				}
-			}
-			else {
-				return true;
-			}
-			i ++;
-		}
-		return false;
-	}
-	
-	public boolean hasNext() {
-		int i = mStackTop -1;
-		Log.i("==DJJ", "hasNext mStackTop="+mStackTop);
-		while(i >= 0) {
-			if(hasNext(mQuestionStack[i]))
-				return true;
-			i --;
-		}
-		return false;	
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstance) {
+		super.onCreate(savedInstance);
 		
 		Intent intent = getIntent();
 		
 		int courseId = intent.getIntExtra(COURSE_ID, 0);
 		int examineeId = intent.getIntExtra(EXAMINEE_ID, 0);
-		Examinee ex = ExamineeManager.getManager().get(examineeId);
+		mExaminee = ExamineeManager.getManager().get(examineeId);
 
-		if(ex == null) {
+		if(mExaminee == null) {
 			Log.e(TAG, "Cannot Get the Examinee by Id=" + examineeId);
 			return;
 		}
-		mPaper = ex.getPapder(courseId);
-		if(mPaper != null)
-			push(mPaper.getQuestions());
-		else 
+		mPaper = mExaminee.getPapder(courseId);
+		if(mPaper == null) {
 			Log.e(TAG, "Cannot Find the Paper for Course:"+courseId);
+			return;
+		}
 		
-		super.onCreate(savedInstance);
-	}
-	
-	@Override
-    protected void inflateContentView(ViewGroup content, LayoutInflater inflater) {
-		View view = inflater.inflate(R.layout.paperlayout, content);
+		setContentView(R.layout.paper_frame);
 		
-		mTitle = (TextView)view.findViewById(R.id.title);
-		mLeftTimes = (TextView)view.findViewById(R.id.timeleft);
-		mPaperContent = (ViewGroup)view.findViewById(R.id.paper_content);
-		mQuestionTrunk = (TextView)view.findViewById(R.id.trunk);
-		mBranchesContainer = (ViewGroup)view.findViewById(R.id.branches);
-		
+		mContentView = (ViewPager)findViewById(R.id.viewpager);
+		mPagerAdapter = new MyPagerAdapter();
+		mContentView.setAdapter(mPagerAdapter);
+		mContentView.setOnPageChangeListener(this);
+		mTitle = (TextView)findViewById(R.id.title);
+		mLeftTimes = (TextView)findViewById(R.id.timeleft);
+		mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
+			
 		mLeftSeconds = 0;
 		
 		setTime(mPaper.getTime());
-		updateUI();
 		startTimer();
-	}
-	
-	public void setTitle(String title) {
-		mTitle.setText(title);
-	}
-	public void setTitle(int resid) {
-		String str = getResources().getString(resid);
-		mTitle.setText(str);
+		
+		mAnswerProgress.setMax(mPaper.count());
+		
+		onPageSelected(0);
 	}
 	
 	public void setTime(int seconds) {
@@ -358,33 +222,71 @@ public class PaperActivity extends BaseActivity {
 	}
 	
 	private void updateTime() {
-		mLeftTimes.setText("剩余"+ (mLeftSeconds/60) + "分" + (mLeftSeconds%60) + "秒");
+		if(mLeftTimes != null)
+			mLeftTimes.setText("剩余"+ (mLeftSeconds/60) + "分" + (mLeftSeconds%60) + "秒");
 	}
 	
 	
+	private void selectQuestion() {
+		if(mPaper == null || mExaminee == null)
+			return;
+		
+		Intent intent = new Intent();
+		//intent.setClass(this, SelectQuestionActivity.class);
+		intent.putExtra(COURSE_ID, mPaper.getCursorId());
+		intent.putExtra(EXAMINEE_ID, mExaminee.getId());
+		
+		startActivityForResult(intent, 0);
+	}
+	
 	@Override
-	protected void inflateToolbarView(ViewGroup toolbar, LayoutInflater inflater) {
-		View view = inflater.inflate(R.layout.paper_toolbar, toolbar);
-		mBtnPrev = (Button)view.findViewById(R.id.prev);
-		mBtnNext = (Button)view.findViewById(R.id.next);
-		mBtnQuestions = (Button)view.findViewById(R.id.questions);
-		mBtnSubmit = (Button)view.findViewById(R.id.submit);
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if(resultCode == 1) {
+			int qid = data.getIntExtra(QUESTION_ID, 0);
+			if(qid == 0)
+				return;
+			
+			gotoQuestion(qid);
+		}
+	}
+	
+	private void gotoQuestion(int qid) {
+		if(mPaper == null)
+			return;
+		
+	
 	}
 
 	@Override
-	protected void onToolbarClick(View view, int id) {
-		switch(id) {
-		case R.id.next:
-			nextQuestion();
-			break;
-		case R.id.prev:
-			prevQuestion();
-			break;
-		case R.id.submit: //提交
-			break;
-		case R.id.questions: //选题
-			break;
-		}
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int index) {
+		TestQuestion tq = mPaper.get(index);
+		mTitle.setText("");
+		if(tq != null) {
+			QuestionGroup qg = tq.getGroup();
+			if(qg != null){
+				mTitle.setText(qg.getTrunk());
+			}
+		}
+		mAnswerProgress.setProgress(mPaper.getAnswerCount());
+	}
+
+	@Override
+	public void onAnswer(TestQuestion tq, int idx) {
+		
+	}
+	
 	
 }

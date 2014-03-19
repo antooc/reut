@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.peice.QuestionAdapter.OnAnswerChanged;
 import com.peice.model.TestQuestion;
 
 public class ShortAnswerQuestionAdapter extends QuestionAdapter{
 	
-	public ShortAnswerQuestionAdapter(TestQuestion tq) {
-		super(tq);
+	TextView mAnswerView;
+	
+	public ShortAnswerQuestionAdapter(TestQuestion tq, OnAnswerChanged onAnswerChanged) {
+		super(tq, onAnswerChanged);
 	}
 	
 	@Override
@@ -21,8 +24,8 @@ public class ShortAnswerQuestionAdapter extends QuestionAdapter{
 	
 	@Override
 	public void getBranchView(ViewGroup parent, LayoutInflater inflater) {
-		TextView ev = (TextView)inflater.inflate(getResId(), null);
-		ev.addTextChangedListener(new TextWatcher() {
+		mAnswerView = (TextView)inflater.inflate(getResId(), null);
+		mAnswerView.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
@@ -44,11 +47,19 @@ public class ShortAnswerQuestionAdapter extends QuestionAdapter{
 				StringBuffer buf = new StringBuffer();
 				buf.append(arg0);
 				setAnswer(buf.toString());
+				onAnswerChanged();
 			}
 			
 		});
-		parent.addView(ev);
+		parent.addView(mAnswerView);
 	
+	}
+	
+	@Override
+	public void onAnswerUpdated() {
+		if(mAnswerView != null) {
+			mAnswerView.setText(getAnswer());
+		}
 	}
 	
 	

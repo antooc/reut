@@ -14,8 +14,8 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 
 	protected CompoundButton[] mBtnBranches;
 	
-	public SelectQuestionAdapter(TestQuestion tq) {
-		super(tq);
+	public SelectQuestionAdapter(TestQuestion tq, OnAnswerChanged onAnswerChanged) {
+		super(tq, onAnswerChanged);
 	}
 
 	@Override
@@ -42,12 +42,28 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 			mBtnBranches[i] = (CompoundButton)view;
 			
 			mBtnBranches[i].setOnCheckedChangeListener(mOnCheckedChanged);
-			
+			android.util.Log.i("==DJJ", "setupUI getBranchView SelectQuestion view="+view);
+			view.setVisibility(View.VISIBLE);
 			parent.addView(view);
 		}
-		
-		
+		onAnswerUpdated();
 	} 
+	
+	@Override
+	public void onAnswerUpdated() {
+		if(mBtnBranches == null || getAnswer() == null)
+			return;
+		char [] answers = getAnswer().toCharArray();
+		if(answers == null || answers.length == 0)
+			return;
+		
+		for(int i = 0; i < answers.length; i++) {
+			int idx = answers[i] - 'A';
+			if(idx >= 0 && idx <= mBtnBranches.length && mBtnBranches[idx] != null) {
+				mBtnBranches[idx].setChecked(true);
+			}
+		}
+	}
 	
 	@Override
 	protected int getResId() {
@@ -58,19 +74,20 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 
 		@Override
 		public void onCheckedChanged(CompoundButton btn, boolean checked) {
-			onCheckedChanged(btn, checked);
+			onBrancheSelectChanged(btn, checked);
 		}
 		
 	};
 	
-	protected void onCheckedChanged(CompoundButton btn, boolean checked) {
+	protected void onBrancheSelectChanged(CompoundButton btn, boolean checked) {
 		StringBuilder answer = new StringBuilder();
 		for(int i = 0; i < mBtnBranches.length; i++) {
 			if(mBtnBranches[i].isChecked()) {
-				answer.append('A' + i);
+				answer.append(IdxToAnswer(i));
 			}
 		}
 		setAnswer(answer.toString());
+		onAnswerChanged();
 	}
 	
 }

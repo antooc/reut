@@ -16,5 +16,24 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="paper_title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="timeleft">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#ff0000</item>
+    </style>
+    
+    
+    <style name="question_trunk">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="question_branches">
+        <item name="android:background">#eeeeee</item>
+    </style>
 
 </resources>
