@@ -10,7 +10,7 @@
 
         <ImageButton
             android:id="@+id/imageButtonArrow"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:background="#3f3f3f"
             android:src="@drawable/ats_filloutinfo" />
@@ -22,10 +22,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/imageButtonArrow"
-            android:gravity="center_horizontal"
+            android:background="#3f3f3f"
+            android:gravity="center_vertical|center_horizontal"
             android:text="@string/fillout_title"
             android:textColor="#c3c3c3"
-            android:background="#3f3f3f"
             android:textSize="30dp" />
 
     </RelativeLayout>
@@ -74,22 +74,27 @@
             android:text="@string/fillout_sex"
             android:textSize="20dp" />
 
-        <RadioButton
-            android:id="@+id/radioButtonMan"
+        <RadioGroup
+            android:id="@+id/radioGroupSex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/tv_fillout_sex"
-            android:text="@string/fillout_man" />
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
 
-        <RadioButton
-            android:id="@+id/radioButtonWoman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/radioButtonMan"
-            android:text="@string/fillout_woman" />
+            <RadioButton
+                android:id="@+id/radioButtonMan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fillout_man" />
+
+            <RadioButton
+                android:id="@+id/radioButtonWoman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fillout_woman" />
+        </RadioGroup>
 
     </RelativeLayout>
 
