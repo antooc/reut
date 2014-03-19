@@ -37,10 +37,9 @@
     <string name="infohint_item">项  目：</string>
     <string name="infohint_timelong">时  长：</string>
     <string name="infohint_subject">科  目：</string>
-    <string name="infohint_subject1">1. 培训评估表</string>
-    <string name="infohint_subject2">2. 销售管理知识</string>
+    <string name="infohint_subjectcontent">1. 培训评估表\n2. 销售管理知识</string>
     <string name="infohint_hint">提  示：</string>
-    <string name="infohint_content">本次测试的成绩关系到各位的学分获取。</string>
+    <string name="infohint_content">\n本次测试的成绩关系到各位的学分获取。\n\n</string>
     <string name="infohint_next">下一步</string>
 
 </resources>
