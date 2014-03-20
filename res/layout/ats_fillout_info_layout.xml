@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
     
     <RelativeLayout
-        android:id="@+id/linearLayoutTitle"
+        android:id="@+id/filloutLinearLayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -30,107 +30,126 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutName"
+    <TableLayout
+        android:id="@+id/filloutTableLayoutInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutTitle"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="14dp" >
+        android:layout_below="@+id/filloutLinearLayoutTitle"
+        android:layout_margin="10dip"
+        android:background="@color/question_group_bg"
+        android:orientation="vertical"
+        android:padding="1dp"
+        android:stretchColumns="1" >
 
-        <TextView
-            android:id="@+id/tv_fillout_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/fillout_name"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/fillout_name_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tv_fillout_name"
-            android:ems="10" >
-
-        </EditText>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutSex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutName"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/tv_fillout_sex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/fillout_sex"
-            android:textSize="20dp" />
-
-        <RadioGroup
-            android:id="@+id/radioGroupSex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tv_fillout_sex"
+        <TableRow
+            android:id="@+id/tablerow_fillout_name"
+            android:background="@color/question_group_bg"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal" >
+            android:paddingBottom="1dp" >
 
-            <RadioButton
-                android:id="@+id/radioButtonMan"
+            <TextView
+                android:id="@+id/tv_fillout_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fillout_man" />
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="@string/fillout_name"
+                android:textSize="20dp" />
 
-            <RadioButton
-                android:id="@+id/radioButtonWoman"
+            <EditText
+                android:id="@+id/fillout_name_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fillout_woman" />
-        </RadioGroup>
+                android:background="#ffffff"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_fillout_name"
+                android:textSize="20dp"
+                android:ems="10" >
 
-    </RelativeLayout>
+            </EditText>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutSex"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" >
+        </TableRow>
 
-        <TextView
-            android:id="@+id/tv_fillout_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/fillout_email"
-            android:textSize="20dp" />
+        <TableRow
+            android:id="@+id/tablerow_fillout_sex"
+            android:background="#ffffff"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp" >
 
-        <EditText
-            android:id="@+id/fillout_name_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tv_fillout_email"
-            android:ems="10" >
-        </EditText>
+            <TextView
+                android:id="@+id/tv_fillout_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/fillout_sex"
+                android:textSize="20dp" />
 
-    </RelativeLayout>
+            <RadioGroup
+                android:id="@+id/radioGroupSex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_fillout_sex"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radioButtonMan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="30dp"
+                    android:text="@string/fillout_man" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonWoman"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fillout_woman" />
+
+            </RadioGroup>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tablerow_fillout_email"
+            android:background="@color/question_group_bg"
+            android:orientation="horizontal"
+            android:paddingTop="1dp" >
+
+            <TextView
+                android:id="@+id/tv_fillout_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="@string/fillout_email"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/fillout_name_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_fillout_email"
+                android:textSize="20dp"
+                android:ems="10" >
+            </EditText>
+
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutEmail"
+        android:layout_below="@+id/filloutTableLayoutInfo"
         android:layout_alignParentLeft="true"
         android:orientation="vertical" >
 
