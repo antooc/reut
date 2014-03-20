@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -34,6 +34,12 @@
     
     <style name="question_branches">
         <item name="android:background">#eeeeee</item>
+    </style>
+    
+   	<style name="answerview">
+        <item name="android:background">@drawable/answerview_bg</item>
+        <item name="android:textColor">@drawable/answerview_text</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

@@ -18,6 +18,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
@@ -45,35 +48,69 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 	QuestionCard mBackQuestionCard;
 	MyPagerAdapter mPagerAdapter;
 	ViewPager    mContentView;
+	CheckBox     mMark;
+	
+	static class PageViewManager<V extends View> {
+		List<V> mCached;
+		Map<Integer, V>  mUsing;
+		V getCached() {
+			if(mCached != null && mCached.size() > 0) {
+				V v = mCached.get(0);
+				mCached.remove(0);
+				return v;
+			}
+			return null;
+		}
+		void putUsing(int pos, V v) {
+			if(mUsing == null) {
+				mUsing = new HashMap<Integer, V>();
+			}
+			mUsing.put(pos, v);
+		}
+		V remove(int pos) {
+			if(mUsing == null)
+				return null;
+			V v = mUsing.get(pos);
+			mUsing.remove(pos);
+			if(mCached == null)
+				mCached = new ArrayList<V>();
+			mCached.add(v);
+			return v;
+		}
+	}
 	
 	class MyPagerAdapter extends PagerAdapter {
 
-		List<QuestionCard>  mQuestionCardRemovedViews;
-		Map<Integer,QuestionCard>  mQuestionUsingViews;
+		PageViewManager<QuestionCard>  mQuestionCardManager = new PageViewManager<QuestionCard>();
+		PageViewManager<AnswerCard>    mAnswerCardManager = new PageViewManager<AnswerCard>();
 		
 		private QuestionCard  getQuestionCard(TestQuestion tq, int poistion) {
-			QuestionCard card = null;
-			if(mQuestionCardRemovedViews != null && mQuestionCardRemovedViews.size() > 0) {
-				card = mQuestionCardRemovedViews.get(0);
-				mQuestionCardRemovedViews.remove(0);
-			}
-			else {
+			QuestionCard card = mQuestionCardManager.getCached();
+			if(card == null) {
 				card = new QuestionCard(PaperActivity.this, null);
 			}
 			
 			card.init(mPaper, PaperActivity.this);
 			card.setQuestion(tq, poistion);
-			if(mQuestionUsingViews == null)
-				mQuestionUsingViews = new HashMap<Integer, QuestionCard>();
-			mQuestionUsingViews.put(poistion, card);
+			mQuestionCardManager.putUsing(poistion, card);
 			
+			return card;
+		}
+		
+		private AnswerCard getAnswerCard(int postion) {
+			AnswerCard card = mAnswerCardManager.getCached();
+			if(card == null) {
+				card = new AnswerCard(PaperActivity.this, null);
+			}
+			card.setPaper(mPaper);
+			mAnswerCardManager.putUsing(postion, card);
 			return card;
 		}
 		
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mPaper != null ? mPaper.count() :  0;
+			return mPaper != null ? mPaper.count() + 1 :  0;
 		}
 
 		@Override
@@ -82,31 +119,40 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 			if(view instanceof QuestionCard && ((QuestionCard)view).getQuestion() == data) {
 				return true;
 			}
+			else if(view instanceof AnswerCard && data instanceof PaperAnswer) {
+				return true;
+			}
 			return false;
 		}
 		
 		@Override
 		public void destroyItem(View container, int position, Object object) {
-			QuestionCard card = null;
-			if(mQuestionUsingViews != null)
+			View view = null;
+			if(position == mPaper.count()) //answer
 			{
-				card = mQuestionUsingViews.get(position);
-				mQuestionUsingViews.remove(position);
+				view = mAnswerCardManager.remove(position);
 			}
-			if(card != null) {
-				if(mQuestionCardRemovedViews == null)
-					mQuestionCardRemovedViews = new ArrayList<QuestionCard>();
-				mQuestionCardRemovedViews.add(card);
-				((ViewGroup)container).removeView(card);
+			else {
+				QuestionCard card = mQuestionCardManager.remove(position);
+				view = card;
 			}
+			((ViewGroup)container).removeView(view);
 		}
 		
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			TestQuestion tq = mPaper.get(position);
-			QuestionCard card = getQuestionCard(tq, position);
-			container.addView(card);
-			return tq;
+			if(position == mPaper.count()) //answer
+			{
+				AnswerCard card = getAnswerCard(position);
+				container.addView(card);
+				return mPaper.getAnswers();
+			}
+			else {
+				TestQuestion tq = mPaper.get(position);
+				QuestionCard card = getQuestionCard(tq, position);
+				container.addView(card);
+				return tq;
+			}
 		}
 		
 	}
@@ -169,6 +215,8 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 			return;
 		}
 		
+		mCurrentQuestion = 0;
+		
 		setContentView(R.layout.paper_frame);
 		
 		mContentView = (ViewPager)findViewById(R.id.viewpager);
@@ -178,8 +226,20 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 		mTitle = (TextView)findViewById(R.id.title);
 		mLeftTimes = (TextView)findViewById(R.id.timeleft);
 		mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
+		mMark = (CheckBox)findViewById(R.id.mark);
+		mMark.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				onMarkChanged(arg1);
+			}
+			
+		});
 			
 		mLeftSeconds = 0;
+		
+		
 		
 		setTime(mPaper.getTime());
 		startTimer();
@@ -187,6 +247,14 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 		mAnswerProgress.setMax(mPaper.count());
 		
 		onPageSelected(0);
+	}
+	
+	private void onMarkChanged(boolean checked) {
+		Log.i("==DJJ", "onMarkChanged, currentQuestion="+mCurrentQuestion+",checked="+checked);
+		if(mCurrentQuestion >= 0 && mCurrentQuestion < mPaper.count()) {
+			TestQuestion tq = mPaper.get(mCurrentQuestion);
+			mPaper.getAnswers().setQuestionMark(tq.getId(), checked);
+		}
 	}
 	
 	public void setTime(int seconds) {
@@ -226,19 +294,6 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 			mLeftTimes.setText("剩余"+ (mLeftSeconds/60) + "分" + (mLeftSeconds%60) + "秒");
 	}
 	
-	
-	private void selectQuestion() {
-		if(mPaper == null || mExaminee == null)
-			return;
-		
-		Intent intent = new Intent();
-		//intent.setClass(this, SelectQuestionActivity.class);
-		intent.putExtra(COURSE_ID, mPaper.getCursorId());
-		intent.putExtra(EXAMINEE_ID, mExaminee.getId());
-		
-		startActivityForResult(intent, 0);
-	}
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
@@ -272,20 +327,31 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 
 	@Override
 	public void onPageSelected(int index) {
-		TestQuestion tq = mPaper.get(index);
-		mTitle.setText("");
-		if(tq != null) {
-			QuestionGroup qg = tq.getGroup();
-			if(qg != null){
-				mTitle.setText(qg.getTrunk());
+		mCurrentQuestion = index;
+		mMark.setEnabled(index >= 0 && index < mPaper.count());
+		if(index < mPaper.count()) //questions
+		{
+			TestQuestion tq = mPaper.get(index);
+			mTitle.setText("");
+			if(tq != null) {
+				QuestionGroup qg = tq.getGroup();
+				if(qg != null){
+					mTitle.setText(qg.getTrunk());
+				}
+				mMark.setChecked(mPaper.getAnswers().isQuestionMark(tq.getId()));
 			}
 		}
-		mAnswerProgress.setProgress(mPaper.getAnswerCount());
+		else {
+			mTitle.setText("答案");
+			mMark.setChecked(false);
+		}
+		
+		
 	}
 
 	@Override
 	public void onAnswer(TestQuestion tq, int idx) {
-		
+		mAnswerProgress.setProgress(mPaper.getAnswerCount());
 	}
 	
 	
