@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 
 public class ATSFilloutInfoActivity extends Activity {
 
     private Button filloutButton;
+    private ImageButton filloutImageButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,27 @@ public class ATSFilloutInfoActivity extends Activity {
 
         filloutButton = (Button) findViewById(R.id.fillout_button);
         filloutButton.setOnClickListener(filloutListener);
+
+        filloutImageButton = (ImageButton) findViewById(R.id.imageButtonArrow);
+        filloutImageButton.setOnClickListener(filloutArrowListener);
+
     }
 
-    Button.OnClickListener filloutListener = new Button.OnClickListener()
-    {
+    Button.OnClickListener filloutListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent();
 
-            intent.setClass(ATSFilloutInfoActivity.this, CourseActivity.class);
+            intent.setClass(ATSFilloutInfoActivity.this, ATSInfoHintActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    };
+
+    ImageButton.OnClickListener filloutArrowListener = new ImageButton.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent();
+
+            intent.setClass(ATSFilloutInfoActivity.this, ATSLogonActivity.class);
             startActivity(intent);
             finish();
         }

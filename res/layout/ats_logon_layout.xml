@@ -15,10 +15,10 @@
             android:id="@+id/tv_logon_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center_horizontal"
+            android:background="#3f3f3f"
+            android:gravity="center_vertical|center_horizontal"
             android:text="@string/logon_title"
             android:textColor="#c3c3c3"
-            android:background="#3f3f3f"
             android:textSize="30dp" />
 
     </LinearLayout>
@@ -38,8 +38,8 @@
         android:id="@+id/relativeLayoutName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutHint"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayoutHint"
         android:layout_marginBottom="14dp" >
 
         <TextView
@@ -67,8 +67,9 @@
         android:id="@+id/relativeLayoutPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/relativeLayoutName"
-        android:layout_alignParentLeft="true" >
+        android:gravity="center_vertical" >
 
         <TextView
             android:id="@+id/tv_logon_password"

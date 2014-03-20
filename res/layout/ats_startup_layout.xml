@@ -4,18 +4,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/atsStartupImageView"
-        android:layout_width="match_parent"
-        android:layout_height="411dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ats_startup" />
-
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/frameLayoutStartupImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-        
+        android:layout_above="@+id/rlFosterTestEvaluation"
+        android:layout_weight="0.96" >
+
+        <ImageView
+            android:id="@+id/atsStartupImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ats_startup" />
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlFosterTestEvaluation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llStartupVesion" >
+
         <ImageView
             android:id="@+id/atsStartupImageView"
             android:layout_width="wrap_content"
@@ -29,23 +39,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/atsStartupImageView"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/atsStartupImageView"
             android:text="@string/startup_evaluation" />
-        
     </RelativeLayout>
-    
+
     <LinearLayout
+        android:id="@+id/llStartupVesion"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-      <TextView 
+        <TextView
             android:id="@+id/vesion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:text="@string/startup_vesion" />
-
     </LinearLayout>
 
 </LinearLayout>

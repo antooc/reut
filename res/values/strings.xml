@@ -9,9 +9,11 @@
     <string name="questions">Questions</string>
     <string name="submit">Submit</string>
 
+    <!-- 培测启动__界面信息所用字符串 -->
     <string name="startup_evaluation">培训效果量化评估</string>
     <string name="startup_vesion">© 2014 www.peice.com.cn  v2.1</string>
 
+    <!-- 登录培测__界面信息所用字符串 -->
     <string name="logon_title">登录培测</string>
     <string name="logon_hint">提示：帐号或密码错误，请重新输入</string>
     <string name="logon_name">账号：</string>
@@ -20,6 +22,7 @@
     <string name="logon_logingin">正在登录...</string>
     <string name="logon_note">说明：\n\n培测序列号形如 1000020058-CYYDCG，前面的10位数字是帐号，后面的6位字母是密码，密码不区分大小写。</string>
 
+    <!-- 填写资料__界面信息所用字符串 -->
     <string name="fillout_title">填写资料</string>
     <string name="fillout_name">姓  名：</string>
     <string name="fillout_sex">性  别：</string>
@@ -27,5 +30,16 @@
     <string name="fillout_woman">女</string>
     <string name="fillout_email">邮  箱：</string>
     <string name="fillout_next">下一步</string>
+
+    <!-- 信息提示__界面信息所用字符串 -->
+    <string name="infohint_title">信息提示</string>
+    <string name="infohint_name">姓  名：</string>
+    <string name="infohint_item">项  目：</string>
+    <string name="infohint_timelong">时  长：</string>
+    <string name="infohint_subject">科  目：</string>
+    <string name="infohint_subjectcontent">1. 培训评估表\n2. 销售管理知识</string>
+    <string name="infohint_hint">提  示：</string>
+    <string name="infohint_content">\n本次测试的成绩关系到各位的学分获取。\n\n</string>
+    <string name="infohint_next">下一步</string>
 
 </resources>

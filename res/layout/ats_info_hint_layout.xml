@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:id="@+id/infohintLinearLayoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/infohintImageButtonArrow"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:background="#3f3f3f"
+            android:src="@drawable/ats_filloutinfo" />
+
+        <TextView
+            android:id="@+id/tv_infohint_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/infohintImageButtonArrow"
+            android:background="#3f3f3f"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/infohint_title"
+            android:textColor="#c3c3c3"
+            android:textSize="30dp" />
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:id="@+id/infohintTableLayoutInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayoutTitle"
+        android:layout_margin="10dip"
+        android:background="@color/question_group_bg"
+        android:orientation="vertical"
+        android:padding="1dp"
+        android:stretchColumns="1" >
+
+        <TableRow
+            android:id="@+id/tablerow_infohint_name"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_infohint_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/infohint_name"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_infohint_namecontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_infohint_name"
+                android:text="张小三"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tablerow_infohint_item"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_infohint_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/infohint_item"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_infohint_itemcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_infohint_item"
+                android:text="大客户部销售经理培训"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tablerow_infohint_timelong"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_infohint_timelong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/infohint_timelong"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_infohint_timelongcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_infohint_timelong"
+                android:text="30 分钟"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tablerow_infohint_subject"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_infohint_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/infohint_subject"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_infohint_subject1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_infohint_subject"
+                android:text="@string/infohint_subjectcontent"
+                android:textSize="20dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tablerow_infohint_hint"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_infohint_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/infohint_hint"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_infohint_hintcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_infohint_hint"
+                android:text="@string/infohint_content"
+                android:textColor="#436eee"
+                android:textSize="20sp" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/infohintLinearLayoutNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/infohintTableLayoutInfo"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/infohint_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/infohint_next" />
+
+    </LinearLayout>
+
+</LinearLayout>
