@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
@@ -28,7 +29,10 @@ import android.util.Log;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-public class PaperActivity extends Activity implements ViewPager.OnPageChangeListener, QuestionCard.Listner {
+public class PaperActivity extends Activity implements 
+		ViewPager.OnPageChangeListener, 
+		QuestionCard.Listner,
+		AnswerCard.Listener{
 	
 	static final String TAG="PaperActivity";
 	
@@ -43,6 +47,7 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 	Examinee mExaminee;
 	int      mCurrentQuestion;
 	ProgressBar mAnswerProgress;
+	ImageButton mShowAnswerCard;
 	
 	QuestionCard mFrontQuestionCard;
 	QuestionCard mBackQuestionCard;
@@ -103,6 +108,7 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 				card = new AnswerCard(PaperActivity.this, null);
 			}
 			card.setPaper(mPaper);
+			card.setListener(PaperActivity.this);
 			mAnswerCardManager.putUsing(postion, card);
 			return card;
 		}
@@ -227,16 +233,21 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 		mLeftTimes = (TextView)findViewById(R.id.timeleft);
 		mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
 		mMark = (CheckBox)findViewById(R.id.mark);
-		mMark.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-
+		mMark.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-				// TODO Auto-generated method stub
-				onMarkChanged(arg1);
+			public void onClick(View v) {
+				onMarkChanged(mMark.isChecked());
 			}
-			
 		});
-			
+		mShowAnswerCard = (ImageButton)findViewById(R.id.questions);
+		
+		mShowAnswerCard.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mContentView.setCurrentItem(mPaper.count()+1);
+			}
+		});
+		
 		mLeftSeconds = 0;
 		
 		
@@ -305,13 +316,7 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 			gotoQuestion(qid);
 		}
 	}
-	
-	private void gotoQuestion(int qid) {
-		if(mPaper == null)
-			return;
-		
-	
-	}
+
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
@@ -324,11 +329,16 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void enableToolButtons(boolean b) {
+		mShowAnswerCard.setEnabled(b);
+		mMark.setEnabled(b);
+	}
 
 	@Override
 	public void onPageSelected(int index) {
 		mCurrentQuestion = index;
-		mMark.setEnabled(index >= 0 && index < mPaper.count());
+		enableToolButtons(index >= 0 && index < mPaper.count());
 		if(index < mPaper.count()) //questions
 		{
 			TestQuestion tq = mPaper.get(index);
@@ -345,13 +355,25 @@ public class PaperActivity extends Activity implements ViewPager.OnPageChangeLis
 			mTitle.setText("答案");
 			mMark.setChecked(false);
 		}
-		
-		
+			
 	}
 
 	@Override
 	public void onAnswer(TestQuestion tq, int idx) {
 		mAnswerProgress.setProgress(mPaper.getAnswerCount());
+	}
+
+	@Override
+	public void gotoQuestion(int index) {
+		if(mPaper == null)
+			return;
+		mContentView.setCurrentItem(index);
+	}
+
+	@Override
+	public void submitAnswer() {
+		// TODO submit the answer
+		
 	}
 	
 	

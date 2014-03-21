@@ -6,6 +6,7 @@ import java.util.List;
 public class Paper {
 	int mCursorId;
 	int mTime;
+	boolean mAutoCheck = false; //是否自动判卷
 	PaperAnswer mAnswers;
 	
 	List<TestQuestion> mQuestions = new ArrayList<TestQuestion>(); 
@@ -14,6 +15,15 @@ public class Paper {
 		mCursorId = cursorId;
 		mTime = time;
 	}
+	
+	public Paper setAutoCheck(boolean b) {
+		mAutoCheck = b;
+		return this;
+	}
+	public boolean getAutoCheck() {
+		return mAutoCheck;
+	}
+
 	
 	public int count() {
 		return mQuestions.size();
@@ -85,10 +95,19 @@ public class Paper {
 			QuestionGroup group = new QuestionGroup("销售培训");
 			
 			_paper2
+				.setAutoCheck(true)
 				.addQuestion(new TestQuestion(1, TestQuestion.TYPE_SIGNLE_SELECT, "下面的插入语句是否正确")
 						.addBranch("正确")
 						.addBranch("错误")
-						.setGroup(group));
+						.setGroup(group)
+						.setModelAnswer("A"))
+				.addQuestion(new TestQuestion(2, TestQuestion.TYPE_SIGNLE_SELECT, "中国的首都是")
+						.addBranch("上海")
+						.addBranch("北京")
+						.addBranch("南京")
+						.addBranch("深圳")
+						.setGroup(group)
+						.setModelAnswer("B"));
 		}
 		
 		if(id == 1)

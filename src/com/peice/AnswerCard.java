@@ -16,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.TextView;
 
 public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChanged {
 	PaperAnswer mAnswer;
@@ -25,7 +24,23 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 	GridView  mGridView;
 	Button    mSubmit;
 	Adapter   mAdapter;
-	Map<Integer, AnswerView> mAnswerViews = new HashMap<Integer, AnswerView>();
+	
+	View.OnClickListener mQuestionOnclicked = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if(mListener != null) {
+				mListener.gotoQuestion((Integer)v.getTag());
+			}
+		}
+	};
+	
+	public static interface Listener {
+		public void gotoQuestion(int index);
+		public void submitAnswer();
+	}
+	
+	Listener mListener;
 	
 	class Adapter extends BaseAdapter {
 
@@ -49,24 +64,41 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 
 		@Override
 		public View getView(int postion, View convert, ViewGroup parent) {
+			ViewGroup vg = null;
 			AnswerView view = null;
 			if(convert != null) {
-				view = (AnswerView)convert;
+				vg = (ViewGroup)convert;
 			}
 			else {
 				LayoutInflater inflater = LayoutInflater.from(getContext());
-				view = (AnswerView)inflater.inflate(R.layout.answerview, null);
+				vg = (ViewGroup)inflater.inflate(R.layout.answerview, null);
 			}
+			vg.setLayoutParams(new GridView.LayoutParams(80, 80));
 			
+			view = (AnswerView)vg.findViewById(R.id.answerview);
 			TestQuestion tq = mPaper.get(postion);
 			view.setText(Integer.toString(postion+1));
 			view.setHasAnswer(mAnswer.getAnswer(tq.getId()) != null);
-			view.setLayoutParams(new GridView.LayoutParams(80, 80));
-			android.util.Log.i("==DJJ", "Grid getView mark=" + mAnswer.isQuestionMark(tq.getId()));
+			android.util.Log.i("==DJJ", "Grid getView id=" + tq.getId() + ",index="+postion +", mark=" + mAnswer.isQuestionMark(tq.getId()));
 			view.setMark(mAnswer.isQuestionMark(tq.getId()));
+			view.setTag(postion);
+			view.setOnClickListener(mQuestionOnclicked);
 			
-			mAnswerViews.put(tq.getId(), view);
-			return view;
+			android.util.Log.i("==DJJ", "User answer="+mAnswer.getAnswer(tq.getId()) + ", ModelAnswer="+tq.getModelAnswer());
+			if(mPaper.getAutoCheck() && tq.isObjectiveQuestion() ) {
+				String answer = mAnswer.getAnswer(tq.getId());
+				if(answer != null) {
+					view.setAnswer(answer.equalsIgnoreCase(tq.getModelAnswer()) ? AnswerView.ANSWER_RIGHT: AnswerView.ANSWER_WRONG);
+				}
+				else {
+					view.setAnswer(AnswerView.ANSWER_UNKNOWN);
+				}
+			}
+			else {
+				view.setAnswer(AnswerView.ANSWER_UNKNOWN);
+			}
+			
+			return vg;
 		}
 		
 	}
@@ -109,31 +141,28 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 		}
 	}
 	
+	public void setListener(Listener listener) {
+		mListener = listener;
+	}
+	
 	public PaperAnswer getAnswer() {
 		return mAnswer;
 	}
 	
 	
 	private void onSubmit() {
-		
+		if(mListener != null) {
+			mListener.submitAnswer();
+		}
 	}
 
 	@Override
 	public void onAnswerChanged(int q_id, String answer) {
-		// TODO Auto-generated method stub
-		/*AnswerView view = mAnswerViews.get(q_id);
-		if(view != null)
-			view.setHasAnswer(true);*/
 		mAdapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onMarkChanged(int q_id, boolean bmarked) {
-		// TODO Auto-generated method stub
-		/*AnswerView view = mAnswerViews.get(q_id);
-		if(view != null) {
-			view.setMark(bmarked);
-		}*/
 		mAdapter.notifyDataSetChanged();
 	}
 }

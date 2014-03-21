@@ -14,16 +14,35 @@ public class TestQuestion {
 	int   mType; //题型
 	int   mId; //试题的id
 	QuestionGroup mGroup;
+	String mModelAnswer; //标准答案
 
-	TestQuestion(int id, int type, String trunk, List<String> branches, QuestionGroup group) {
+	TestQuestion(int id, int type, String trunk, List<String> branches, QuestionGroup group, String modelAnswer) {
 		mId = id;
 		mType = type;
 		mTrunk = trunk;
 		mBranches = branches;
 		mGroup = group;
+		mModelAnswer = modelAnswer;
 	}
 	TestQuestion(int id, int type, String trunk) {
-		this(id, type, trunk, null, null);
+		this(id, type, trunk, null, null, null);
+	}
+	
+	TestQuestion(int id, int type, String trunk, List<String> branches, QuestionGroup group) {
+		this(id, type, trunk, branches, group, null);
+	}
+	
+	public boolean isObjectiveQuestion() {
+		return mType == TYPE_SIGNLE_SELECT || mType == TYPE_MULTI_SELECT;
+	}
+	
+	public TestQuestion setModelAnswer(String ma) {
+		mModelAnswer = ma;
+		return this;
+	}
+	
+	public String getModelAnswer() {
+		return mModelAnswer;
 	}
 	
 	public int getId() {
