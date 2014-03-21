@@ -1,6 +1,7 @@
 
 package com.peice;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,14 @@ public class ATSLogonActivity extends Activity {
 
         logonButton = (Button) findViewById(R.id.logon_button);
         logonButton.setOnClickListener(logonListener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ActionBar ab = this.getActionBar();
+        ab.hide();
     }
 
     Button.OnClickListener logonListener = new Button.OnClickListener()

@@ -1,19 +1,21 @@
 
 package com.peice;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+// import android.widget.ImageButton;
 
 
 public class ATSInfoHintActivity extends Activity {
 
     private Button infohintButton;
-    private ImageButton infohintImageButton;
+    // private ImageButton infohintImageButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,9 +26,34 @@ public class ATSInfoHintActivity extends Activity {
         infohintButton = (Button) findViewById(R.id.infohint_button);
         infohintButton.setOnClickListener(infohintListener);
 
-        infohintImageButton = (ImageButton) findViewById(R.id.infohintImageButtonArrow);
-        infohintImageButton.setOnClickListener(infohintArrowListener);
+        // infohintImageButton = (ImageButton) findViewById(R.id.infohintImageButtonArrow);
+        // infohintImageButton.setOnClickListener(infohintArrowListener);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ActionBar ab = this.getActionBar();
+        ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        ab.setTitle(R.string.infohint_title);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case android.R.id.home:
+            Intent intent = new Intent(this, ATSFilloutInfoActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     Button.OnClickListener infohintListener = new Button.OnClickListener() {
@@ -39,14 +66,14 @@ public class ATSInfoHintActivity extends Activity {
         }
     };
 
-    ImageButton.OnClickListener infohintArrowListener = new ImageButton.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent();
+    // ImageButton.OnClickListener infohintArrowListener = new ImageButton.OnClickListener() {
+    //     public void onClick(View v) {
+    //         Intent intent = new Intent();
 
-            intent.setClass(ATSInfoHintActivity.this, ATSFilloutInfoActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    };
+    //         intent.setClass(ATSInfoHintActivity.this, ATSFilloutInfoActivity.class);
+    //         startActivity(intent);
+    //         finish();
+    //     }
+    // };
 }
 
