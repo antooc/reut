@@ -22,7 +22,7 @@ public class ATSLogonActivity extends Activity {
 
         setContentView(R.layout.ats_logon_layout);
 
-        ll_Hint = (LinearLayout) findViewById(R.id.linearLayoutHint);
+        ll_Hint = (LinearLayout) findViewById(R.id.logonLinearLayoutHint);
 
         logonButton = (Button) findViewById(R.id.logon_button);
         logonButton.setOnClickListener(logonListener);

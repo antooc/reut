@@ -26,7 +26,7 @@
     <string name="fillout_title">填写资料</string>
     <string name="fillout_name">姓  名：</string>
     <string name="fillout_sex">性  别：</string>
-    <string name="fillout_man">男  </string>
+    <string name="fillout_man">男</string>
     <string name="fillout_woman">女</string>
     <string name="fillout_email">邮  箱：</string>
     <string name="fillout_next">下一步</string>

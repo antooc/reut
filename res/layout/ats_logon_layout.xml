@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/linearLayoutTitle"
+        android:id="@+id/logonLinearLayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -24,77 +24,92 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutHint"
+        android:id="@+id/logonLinearLayoutHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutTitle"
+        android:layout_below="@+id/logonLinearLayoutTitle"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="18dp"
         android:orientation="vertical" >
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutName"
+    <TableLayout
+        android:id="@+id/logonTableLayoutInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayoutHint"
-        android:layout_marginBottom="14dp" >
+        android:layout_below="@+id/logonLinearLayoutHint"
+        android:layout_margin="10dip"
+        android:background="@color/question_group_bg"
+        android:orientation="vertical"
+        android:padding="1dp"
+        android:stretchColumns="1" >
 
-        <TextView
-            android:id="@+id/tv_logon_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/logon_name"
-            android:textSize="20dp" />
+        <TableRow
+            android:id="@+id/tablerow_logon_name"
+            android:background="@color/question_group_bg"
+            android:orientation="horizontal"
+            android:paddingBottom="1dp" >
 
-        <EditText
-            android:id="@+id/logon_name_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tv_logon_name"
-            android:ems="10" >
+            <TextView
+                android:id="@+id/tv_logon_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="@string/logon_name"
+                android:textSize="20dp" />
 
-        </EditText>
+            <EditText
+                android:id="@+id/logon_name_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_logon_name"
+                android:textSize="20dp"
+                android:ems="10" >
 
-    </RelativeLayout>
+            </EditText>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/relativeLayoutName"
-        android:gravity="center_vertical" >
+        </TableRow>
 
-        <TextView
-            android:id="@+id/tv_logon_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/logon_password"
-            android:textSize="20dp" />
+        <TableRow
+            android:id="@+id/tablerow_logon_password"
+            android:background="@color/question_group_bg"
+            android:orientation="horizontal"
+            android:paddingBottom="1dp" >
 
-        <EditText
-            android:id="@+id/logon_password_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tv_logon_password"
-            android:ems="10"
-            android:inputType="textPassword" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_logon_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="@string/logon_password"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/logon_password_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_logon_password"
+                android:background="#ffffff"
+                android:textSize="20dp"
+                android:ems="10"
+                android:inputType="textPassword" />
+
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutButton"
+        android:id="@+id/logonLinearLayoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutPassword"
+        android:layout_below="@+id/logonTableLayoutInfo"
         android:layout_alignParentLeft="true"
         android:orientation="vertical" >
 
@@ -108,10 +123,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutNote"
+        android:id="@+id/logonLinearLayoutNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutButton"
+        android:layout_below="@+id/logonLinearLayoutButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:orientation="vertical" >
