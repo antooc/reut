@@ -31,7 +31,7 @@ public class ATSStartupActivity extends Activity {
         ab.hide();
 
         /* 1 second after close ATSStartupActivity, enter CourseActivity. */
-        new Handler().postDelayed(r,1000);
+        new Handler().postDelayed(r, 1000);
     }
 }
 
