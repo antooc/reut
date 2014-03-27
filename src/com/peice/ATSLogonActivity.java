@@ -1,6 +1,7 @@
 
 package com.peice;
 
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,10 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.peice.model.ATSDialogUtil;
+import com.peice.model.ATSHttpUtil;
 
 public class ATSLogonActivity extends Activity {
 
@@ -50,33 +54,29 @@ public class ATSLogonActivity extends Activity {
         ab.hide();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        logonButton.setText(R.string.logon_logon);
-    }
-
     Button.OnClickListener logonListener = new Button.OnClickListener()
     {
         public void onClick(View v) {
             logonButton.setText(R.string.logon_logingin);
 
             if (valudate()) {
-                if (logonProcess()) {
-                    enterNextActivity();
-                }
-                else {
+                if (loginProcess()) {
+                    if (validTestStatus()) {
+                        enterNextActivity(ATSInfoHintActivity.class);
+                    } else {
+                        enterNextActivity(ATSFilloutInfoActivity.class);
+                    }
+                } else {
                     showHintView();
                 }
             }
         }
     };
 
-    private void enterNextActivity() {
+    private void enterNextActivity(Class<?> cls) {
         Intent intent = new Intent();
 
-        intent.setClass(ATSLogonActivity.this, ATSFilloutInfoActivity.class);
+        intent.setClass(ATSLogonActivity.this, cls);
         startActivity(intent);
         finish();
     }
@@ -90,9 +90,14 @@ public class ATSLogonActivity extends Activity {
         tv_hint.setTextColor(Color.RED);
     }
 
-    private boolean logonProcess() {
+    // 检查考试状态
+    private boolean validTestStatus() {
+        return false;
+    }
+
+    private boolean loginProcess() {
         String userName = logonNameEdit.getText().toString();
-        String password = logonPasswordEdit.getText().toString();
+        String password = MD5(logonPasswordEdit.getText().toString());
         JSONObject jsonObj;
 
         try {
@@ -100,8 +105,7 @@ public class ATSLogonActivity extends Activity {
             if (jsonObj.getInt("userId") > 0) {
                 return true;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -112,27 +116,93 @@ public class ATSLogonActivity extends Activity {
     private boolean valudate() {
         String userName = logonNameEdit.getText().toString().trim();
         if (userName.equals("")) {
-            ATSDialogUtil.showDialog(this, "用户名是必填项！", false);
+            showDialog("用户名是必填项！");
             return false;
         }
 
         String password = logonPasswordEdit.getText().toString().trim();
         if (password.equals("")) {
-            ATSDialogUtil.showDialog(this, "密码是必填项！", false);
+            showDialog("密码是必填项！");
             return false;
         }
 
         return true;
     }
 
+    private void showDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg) .setCancelable(false)
+            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    logonButton.setText(R.string.logon_logon);
+                }
+            });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private JSONObject query(String userName, String password) throws Exception {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("user", userName);
+        map.put("candname", userName);
         map.put("pass", password);
 
-        // String url = HttpUtil.BASE_URL + "login.jsp";
-        // return new JSONObject(HttpUtil.postRequest(url, map));
-        return null;
+        String url = ATSHttpUtil.BASE_URL + "tbl_proj_cand";
+        return new JSONObject(ATSHttpUtil.postRequest(url, map));
+    }
+
+    // 根据用户名称密码查询
+    private String queryC(String account, String password) throws Exception {
+        // 查询参数
+        String queryString = "account=" + account + "&password=" + password;
+        // url
+        String url = ATSHttpUtil.BASE_URL + "servlet/tbl_proj_cand?" + queryString;
+        // 查询返回结果
+        return ATSHttpUtil.queryStringForPost(url);
+    }
+
+    // MD5加密，32位 
+    public static String MD5(String str) { 
+        MessageDigest md5 = null; 
+        try { 
+            md5 = MessageDigest.getInstance("MD5"); 
+        }
+        catch (Exception e) { 
+            e.printStackTrace(); 
+            return ""; 
+        } 
+         
+        char[] charArray = str.toCharArray(); 
+        byte[] byteArray = new byte[charArray.length]; 
+         
+        for (int i = 0; i < charArray.length; i++) { 
+            byteArray[i] = (byte) charArray[i]; 
+        } 
+
+        byte[] md5Bytes = md5.digest(byteArray); 
+        StringBuffer hexValue = new StringBuffer(); 
+
+        for (int i = 0; i < md5Bytes.length; i++) { 
+            int val = ((int) md5Bytes[i]) & 0xff; 
+            if (val < 16) { 
+                hexValue.append("0"); 
+            } 
+            hexValue.append(Integer.toHexString(val)); 
+        }
+
+        return hexValue.toString(); 
+    } 
+     
+    // 可逆的加密算法 
+    public static String encryptMD5(String str) { 
+        char[] a = str.toCharArray(); 
+
+        for (int i = 0; i < a.length; i++) { 
+            a[i] = (char) (a[i] ^ 'l'); 
+        } 
+
+        String s = new String(a); 
+
+        return s; 
     }
 }
 

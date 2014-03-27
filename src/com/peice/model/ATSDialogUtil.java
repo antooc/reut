@@ -13,7 +13,7 @@ import android.view.View;
 public class ATSDialogUtil {
     public static void showDialog(final Context ctx, String msg, boolean closeSelf) {
 
-    	AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
             .setMessage(msg).setCancelable(false);
 
         if (closeSelf) {
@@ -36,7 +36,7 @@ public class ATSDialogUtil {
     }
 
     public static void showDialog(Context ctx, View view) {
-    	AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
                 .setView(view).setCancelable(false)
                 .setPositiveButton("确定", null);
 

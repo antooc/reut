@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-// import android.widget.ImageButton;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 
 
 public class ATSFilloutInfoActivity extends Activity {
 
+    private EditText filloutNameEdit;
+    private EditText filloutEmailEdit;
+    private RadioGroup filloutRadioGroup;
     private Button filloutButton;
-    // private ImageButton filloutImageButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,11 +25,11 @@ public class ATSFilloutInfoActivity extends Activity {
 
         setContentView(R.layout.ats_fillout_info_layout);
 
+        filloutNameEdit = (EditText) findViewById(R.id.fillout_name_edit);
+        filloutEmailEdit = (EditText) findViewById(R.id.fillout_name_email);
+
         filloutButton = (Button) findViewById(R.id.fillout_button);
         filloutButton.setOnClickListener(filloutListener);
-
-        // filloutImageButton = (ImageButton) findViewById(R.id.imageButtonArrow);
-        // filloutImageButton.setOnClickListener(filloutArrowListener);
 
     }
 
@@ -42,16 +45,15 @@ public class ATSFilloutInfoActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
-        {
-        case android.R.id.home:
-            Intent intent = new Intent(this, ATSLogonActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, ATSLogonActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -64,15 +66,5 @@ public class ATSFilloutInfoActivity extends Activity {
             finish();
         }
     };
-
-    // ImageButton.OnClickListener filloutArrowListener = new ImageButton.OnClickListener() {
-    //     public void onClick(View v) {
-    //         Intent intent = new Intent();
-
-    //         intent.setClass(ATSFilloutInfoActivity.this, ATSLogonActivity.class);
-    //         startActivity(intent);
-    //         finish();
-    //     }
-    // };
 }
 
