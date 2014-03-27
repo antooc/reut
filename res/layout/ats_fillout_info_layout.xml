@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+    <!--
     <RelativeLayout
         android:id="@+id/filloutLinearLayoutTitle"
         android:layout_width="match_parent"
@@ -29,13 +30,14 @@
             android:textSize="30dp" />
 
     </RelativeLayout>
+        android:layout_below="@+id/filloutLinearLayoutTitle"
+    -->
 
     <TableLayout
         android:id="@+id/filloutTableLayoutInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/filloutLinearLayoutTitle"
         android:layout_margin="10dip"
         android:background="@color/question_group_bg"
         android:orientation="vertical"
@@ -75,16 +77,15 @@
         <TableRow
             android:id="@+id/tablerow_fillout_sex"
             android:background="#ffffff"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp" >
+            android:paddingBottom="1dp"
+            android:paddingTop="1dp" >
 
             <TextView
                 android:id="@+id/tv_fillout_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:text="@string/fillout_sex"
                 android:textSize="20dp" />
 
