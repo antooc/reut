@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,6 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.peice.common.BaseActivity;
 import com.peice.model.Course;
 import com.peice.model.ExamineeManager;
 import com.peice.model.Examinee;
@@ -85,6 +88,9 @@ public class CourseActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+    	setContentView(R.layout.course_content);
+    	mCourseList = (ListView)findViewById(R.id.course_list);
+        
         //TODO 
         mExaminee = ExamineeManager.getManager().login("doon", "1234");
         
@@ -97,6 +103,13 @@ public class CourseActivity extends BaseActivity {
         		onCourseClicked(arg2);
         	}
         });
+    }
+    
+    @Override
+    public void onStart() {
+    	super.onStart();
+    	setTitle(mExaminee.getCaption());
+    	showBack(true);
     }
     
     private void onCourseClicked(int pos) {
@@ -154,12 +167,6 @@ public class CourseActivity extends BaseActivity {
     	intent.putExtra(PaperActivity.EXAMINEE_ID, mExaminee.getId());
     	intent.putExtra(PaperActivity.COURSE_ID, course.id);
     	startActivity(intent);
-    }
-    
-    @Override
-    protected void inflateContentView(ViewGroup content, LayoutInflater inflater) {
-    	View view = inflater.inflate(R.layout.course_content, content);
-    	mCourseList = (ListView)view.findViewById(R.id.course_list);
     }
 
 

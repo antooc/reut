@@ -19,6 +19,7 @@ public class ExamineeManager {
 		//TODO
 		if("doon".equals(username) && "1234".equals(password)) {
 			Examinee ex = new Examinee(1, username, password);
+			ex.setCaption("Doon的销售培训课程");
 			mExaminees.put(1, ex);
 			return ex;
 		}

@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >   
 
 	<!-- 无答案有标记 -->  
-	<item android:state_pressed="true" android:state_checked="true" android:state_selected="false" android:drawable= "@drawable/answermark_pressed" />
-	<item android:state_checked="true" android:state_selected="false" android:drawable= "@drawable/noanswer_mark" /> 
-	<!-- 有答案无标记-->  
 	<item android:state_pressed="true" android:state_checked="false" android:state_selected="true" android:drawable= "@drawable/answermark_pressed" />
-	<item android:state_checked="false" android:state_selected="true" android:drawable= "@drawable/answer_unmark" />  
+	<item android:state_checked="false" android:state_selected="true" android:drawable= "@drawable/noanswer_mark" /> 
+	<!-- 有答案无标记-->  
+	<item android:state_pressed="true" android:state_checked="true" android:state_selected="false" android:drawable= "@drawable/answermark_pressed" />
+	<item android:state_checked="true" android:state_selected="false" android:drawable= "@drawable/answer_unmark" />  
 	<!--有答案有标记-->  
 	<item android:state_pressed="true" android:state_checked="true" android:state_selected="true"  android:drawable= "@drawable/answermark_pressed" />
 	<item android:state_checked="true" android:state_selected="true"  android:drawable= "@drawable/answer_mark" />

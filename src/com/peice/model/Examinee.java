@@ -14,6 +14,7 @@ public class Examinee {
 	int mGender;
 	String mPassword;
 	String mUserName;
+	String mCaption;
 	
 	Map<Integer, Course>  mCursors;
 	Map<Integer, Paper>   mPapers;
@@ -61,6 +62,14 @@ public class Examinee {
 	
 	public int getId() {
 		return mId;
+	}
+	
+	public String getCaption() {
+		return mCaption;
+	}
+	
+	public void setCaption(String caption) {
+		mCaption = caption;
 	}
 	
 	

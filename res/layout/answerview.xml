@@ -6,6 +6,6 @@
 	<com.peice.AnswerView
 	    android:id="@+id/answerview"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
 	    style="@style/answerview" />
 </FrameLayout>

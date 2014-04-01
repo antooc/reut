@@ -1,6 +1,8 @@
 
 package com.peice;
 
+import com.peice.common.BaseActivity;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 
-public class ATSFilloutInfoActivity extends Activity {
+public class ATSFilloutInfoActivity extends BaseActivity {
 
     private EditText filloutNameEdit;
     private EditText filloutEmailEdit;
@@ -37,9 +39,11 @@ public class ATSFilloutInfoActivity extends Activity {
     public void onStart() {
         super.onStart();
 
-        ActionBar ab = this.getActionBar();
+        /*ActionBar ab = this.getActionBar();
         ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-        ab.setTitle(R.string.fillout_title);
+        ab.setTitle(R.string.fillout_title);*/
+        setTitle(R.string.fillout_title);
+        showBack(true);
     }
 
     @Override

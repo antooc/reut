@@ -17,6 +17,12 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
+    <!--  标题文字的风格 -->
+    <style name="title_text">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
     <style name="paper_title">
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">bold</item>
@@ -42,4 +48,12 @@
         <item name="android:gravity">center</item>
     </style>
 
+   	<style name="option_btn_multi">
+   	    <item name="android:button">@drawable/option_btn_multi</item>
+   	</style>
+   	
+   	<style name="option_btn_single">
+   	    <item name="android:button">@drawable/option_btn_single</item>
+   	</style>
+   	
 </resources>

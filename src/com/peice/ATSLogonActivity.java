@@ -22,9 +22,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.peice.common.BaseActivity;
 import com.peice.model.ATSHttpUtil;
 
-public class ATSLogonActivity extends Activity {
+public class ATSLogonActivity extends BaseActivity {
 
     private EditText logonNameEdit;
     private EditText logonPasswordEdit;
@@ -50,8 +51,7 @@ public class ATSLogonActivity extends Activity {
     public void onStart() {
         super.onStart();
 
-        ActionBar ab = this.getActionBar();
-        ab.hide();
+        setTitle(R.string.logon_title);
     }
 
     Button.OnClickListener logonListener = new Button.OnClickListener()
@@ -90,7 +90,7 @@ public class ATSLogonActivity extends Activity {
         tv_hint.setTextColor(Color.RED);
     }
 
-    // ¼ì²é¿¼ÊÔ×´Ì¬
+    // ï¿½ï¿½é¿¼ï¿½ï¿½×´Ì¬
     private boolean validTestStatus() {
         return false;
     }
@@ -116,13 +116,13 @@ public class ATSLogonActivity extends Activity {
     private boolean valudate() {
         String userName = logonNameEdit.getText().toString().trim();
         if (userName.equals("")) {
-            showDialog("ÓÃ»§ÃûÊÇ±ØÌîÏî£¡");
+            showDialog("ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½ï¿½î£¡");
             return false;
         }
 
         String password = logonPasswordEdit.getText().toString().trim();
         if (password.equals("")) {
-            showDialog("ÃÜÂëÊÇ±ØÌîÏî£¡");
+            showDialog("ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½ï¿½î£¡");
             return false;
         }
 
@@ -132,7 +132,7 @@ public class ATSLogonActivity extends Activity {
     private void showDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg) .setCancelable(false)
-            .setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+            .setPositiveButton("È·ï¿½ï¿½", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     logonButton.setText(R.string.logon_logon);
                 }
@@ -150,17 +150,17 @@ public class ATSLogonActivity extends Activity {
         return new JSONObject(ATSHttpUtil.postRequest(url, map));
     }
 
-    // ¸ù¾ÝÓÃ»§Ãû³ÆÃÜÂë²éÑ¯
+    // ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯
     private String queryC(String account, String password) throws Exception {
-        // ²éÑ¯²ÎÊý
+        // ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
         String queryString = "account=" + account + "&password=" + password;
         // url
         String url = ATSHttpUtil.BASE_URL + "servlet/tbl_proj_cand?" + queryString;
-        // ²éÑ¯·µ»Ø½á¹û
+        // ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½Ø½ï¿½ï¿½
         return ATSHttpUtil.queryStringForPost(url);
     }
 
-    // MD5¼ÓÃÜ£¬32Î» 
+    // MD5ï¿½ï¿½ï¿½Ü£ï¿½32Î» 
     public static String MD5(String str) { 
         MessageDigest md5 = null; 
         try { 
@@ -192,7 +192,7 @@ public class ATSLogonActivity extends Activity {
         return hexValue.toString(); 
     } 
      
-    // ¿ÉÄæµÄ¼ÓÃÜËã·¨ 
+    // ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ã·¨ 
     public static String encryptMD5(String str) { 
         char[] a = str.toCharArray(); 
 

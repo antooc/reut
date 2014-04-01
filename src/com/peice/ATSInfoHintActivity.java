@@ -1,6 +1,8 @@
 
 package com.peice;
 
+import com.peice.common.BaseActivity;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +14,7 @@ import android.widget.Button;
 // import android.widget.ImageButton;
 
 
-public class ATSInfoHintActivity extends Activity {
+public class ATSInfoHintActivity extends BaseActivity {
 
     private Button infohintButton;
     // private ImageButton infohintImageButton;
@@ -28,16 +30,17 @@ public class ATSInfoHintActivity extends Activity {
 
         // infohintImageButton = (ImageButton) findViewById(R.id.infohintImageButtonArrow);
         // infohintImageButton.setOnClickListener(infohintArrowListener);
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        ActionBar ab = this.getActionBar();
+        /*ActionBar ab = this.getActionBar();
         ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-        ab.setTitle(R.string.infohint_title);
+        ab.setTitle(R.string.infohint_title);*/
+        setTitle(R.string.infohint_title);
+        showBack(true);
     }
 
     @Override
