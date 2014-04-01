@@ -43,7 +43,6 @@ public class ATSFilloutInfoActivity extends BaseActivity {
         ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
         ab.setTitle(R.string.fillout_title);*/
         setTitle(R.string.fillout_title);
-        showBack(true);
     }
 
     @Override

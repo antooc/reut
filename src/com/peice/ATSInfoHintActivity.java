@@ -40,7 +40,6 @@ public class ATSInfoHintActivity extends BaseActivity {
         ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
         ab.setTitle(R.string.infohint_title);*/
         setTitle(R.string.infohint_title);
-        showBack(true);
     }
 
     @Override

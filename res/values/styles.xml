@@ -21,15 +21,16 @@
     <style name="title_text">
         <item name="android:textSize">18sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">#ffcccccc</item>
     </style>
     
     <style name="paper_title">
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="timeleft">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#ff0000</item>
+    <style name="time_left">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffaaaaaa</item>
     </style>
     
     
@@ -54,6 +55,13 @@
    	
    	<style name="option_btn_single">
    	    <item name="android:button">@drawable/option_btn_single</item>
+   	</style>
+   	
+   	<style name="button">
+   	    <item name="android:background">@drawable/button_bg</item>
+   	    <item name="android:textColor">#ffffffff</item>
+   	    <item name="android:layout_marginLeft">10dp</item>
+   	    <item name="android:layout_marginRight">10dp</item>
    	</style>
    	
 </resources>

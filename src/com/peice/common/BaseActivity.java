@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class BaseActivity extends Activity {
@@ -25,7 +26,16 @@ public class BaseActivity extends Activity {
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setCustomView(R.layout.baselayout);
+		
 		mTitle = (TextView)actionBar.getCustomView().findViewById(R.id.title);
+		
+		final ImageButton backbtn = (ImageButton)actionBar.getCustomView().findViewById(android.R.id.home);
+		backbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 	
 	public void showBack(boolean b) {

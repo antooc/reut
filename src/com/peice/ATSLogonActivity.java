@@ -50,6 +50,7 @@ public class ATSLogonActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+        showBack(false);
 
         setTitle(R.string.logon_title);
     }

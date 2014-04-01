@@ -109,7 +109,6 @@ public class CourseActivity extends BaseActivity {
     public void onStart() {
     	super.onStart();
     	setTitle(mExaminee.getCaption());
-    	showBack(true);
     }
     
     private void onCourseClicked(int pos) {
@@ -170,12 +169,6 @@ public class CourseActivity extends BaseActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.course, menu);
-        return true;
-    }
     
     
     private List<Course> getCourse() {

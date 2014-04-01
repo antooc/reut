@@ -12,10 +12,12 @@ import com.peice.model.PaperAnswer;
 import com.peice.model.QuestionGroup;
 import com.peice.model.TestQuestion;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -229,17 +231,44 @@ public class PaperActivity extends Activity implements
 		mPagerAdapter = new MyPagerAdapter();
 		mContentView.setAdapter(mPagerAdapter);
 		mContentView.setOnPageChangeListener(this);
-		mTitle = (TextView)findViewById(R.id.title);
-		mLeftTimes = (TextView)findViewById(R.id.timeleft);
-		mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
-		mMark = (CheckBox)findViewById(R.id.mark);
+		
+		//mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
+		
+		
+		
+		mLeftSeconds = 0;
+		
+		
+		
+		
+		
+		//mAnswerProgress.setMax(mPaper.count());
+		
+		
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View view =  inflater.inflate(R.layout.paper_nav, null);
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowCustomEnabled(true);
+		actionBar.setCustomView(view);
+		
+		mTitle = (TextView)view.findViewById(R.id.title);
+		mLeftTimes = (TextView)view.findViewById(R.id.time_left);
+		mMark = (CheckBox)view.findViewById(R.id.mark);
 		mMark.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onMarkChanged(mMark.isChecked());
 			}
 		});
-		mShowAnswerCard = (ImageButton)findViewById(R.id.questions);
+		mShowAnswerCard = (ImageButton)view.findViewById(R.id.questions);
 		
 		mShowAnswerCard.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -247,17 +276,11 @@ public class PaperActivity extends Activity implements
 				mContentView.setCurrentItem(mPaper.count()+1);
 			}
 		});
-		
-		mLeftSeconds = 0;
-		
-		
-		
+		onPageSelected(0);
 		setTime(mPaper.getTime());
 		startTimer();
 		
-		mAnswerProgress.setMax(mPaper.count());
 		
-		onPageSelected(0);
 	}
 	
 	private void onMarkChanged(boolean checked) {
@@ -302,7 +325,7 @@ public class PaperActivity extends Activity implements
 	
 	private void updateTime() {
 		if(mLeftTimes != null)
-			mLeftTimes.setText("剩余"+ (mLeftSeconds/60) + "分" + (mLeftSeconds%60) + "秒");
+			mLeftTimes.setText( (mLeftSeconds/60) + ":" + (mLeftSeconds%60));
 	}
 	
 	@Override
@@ -360,7 +383,7 @@ public class PaperActivity extends Activity implements
 
 	@Override
 	public void onAnswer(TestQuestion tq, int idx) {
-		mAnswerProgress.setProgress(mPaper.getAnswerCount());
+		//mAnswerProgress.setProgress(mPaper.getAnswerCount());
 	}
 
 	@Override
