@@ -97,7 +97,7 @@ public class PaperActivity extends Activity implements
 				card = new QuestionCard(PaperActivity.this, null);
 			}
 			
-			card.init(mPaper, PaperActivity.this);
+			card.init(mExaminee, mPaper, PaperActivity.this);
 			card.setQuestion(tq, poistion);
 			mQuestionCardManager.putUsing(poistion, card);
 			
@@ -234,12 +234,7 @@ public class PaperActivity extends Activity implements
 		
 		//mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
 		
-		
-		
 		mLeftSeconds = 0;
-		
-		
-		
 		
 		
 		//mAnswerProgress.setMax(mPaper.count());
@@ -280,8 +275,10 @@ public class PaperActivity extends Activity implements
 		setTime(mPaper.getTime());
 		startTimer();
 		
+		mTitle.setText(mExaminee.getCaption());
 		
 	}
+	
 	
 	private void onMarkChanged(boolean checked) {
 		Log.i("==DJJ", "onMarkChanged, currentQuestion="+mCurrentQuestion+",checked="+checked);

@@ -1,9 +1,18 @@
 package com.peice;
 
+import com.peice.model.Course;
+import com.peice.model.Examinee;
 import com.peice.model.Paper;
 import com.peice.model.TestQuestion;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +25,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 	Paper mPaper;
 	int   mQuestionIndex;
 	TestQuestion mQuestion;
+	Examinee mExaminee;
 	
 	public static interface Listner {
 		public void onAnswer(TestQuestion tq, int idx);
@@ -26,6 +36,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 	TextView mQuestionTrunk;
 	QuestionAdapter mQuestionAdapter;
 	TextView mTitle;
+	TextView mQuestionCount;
 	Listner mListner;
 	
 	public QuestionCard(Context context, AttributeSet attr) {
@@ -38,7 +49,8 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View view = inflater.inflate(R.layout.paperlayout, this);
 		
-		mTitle = (TextView)view.findViewById(R.id.title);
+		mTitle = (TextView)view.findViewById(R.id.course_title);
+		mQuestionCount = (TextView)view.findViewById(R.id.question_count);
 		mQuestionTrunk = (TextView)view.findViewById(R.id.trunk);
 		mBranchesContainer = (ViewGroup)view.findViewById(R.id.branches);
 		
@@ -62,12 +74,32 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		setupUI();
 	}
 	
-	public void init(Paper paper, Listner listner) {
+	public void init(Examinee examinee, Paper paper, Listner listner) {
+		mExaminee = examinee;
 		mPaper = paper;
 		mListner = listner;
 	}
 	
+	private void updateQuestionCount() {
+		SpannableStringBuilder text = new SpannableStringBuilder();
+		String sindex = Integer.toString(mQuestionIndex+1);
+		text.append(sindex);
+		text.append("/");
+		text.append(Integer.toString(mPaper.count()));
+		text.setSpan(new ForegroundColorSpan(Color.BLUE), 0, sindex.length(),   
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		text.setSpan(new AbsoluteSizeSpan(40), 0, sindex.length(), 0);
+		
+		mQuestionCount.setText(text);
+	}
+	
 	private void setupUI() {
+
+		Course course = mExaminee.getCourse(mPaper.getCourseId());
+		mTitle.setText(course.name);
+		updateQuestionCount();
+		
+		
 		//mTitle.setText(mQuestion.getGroup());
 		mQuestionTrunk.setText(mQuestion.getTrunk());
 		

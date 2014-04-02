@@ -16,7 +16,7 @@ public class Examinee {
 	String mUserName;
 	String mCaption;
 	
-	Map<Integer, Course>  mCursors;
+	Map<Integer, Course>  mCourses;
 	Map<Integer, Paper>   mPapers;
 	List<PaperAnswer>     mPaperAnswers;
 	
@@ -31,11 +31,11 @@ public class Examinee {
 	}
 	
 	public List<Course> queryCourse() {
-		if(mCursors == null) {
+		if(mCourses == null) {
 			loadCourse();
 		}
 		
-		Collection<Course> courses = mCursors.values();
+		Collection<Course> courses = mCourses.values();
 		
 		Iterator<Course> it = courses.iterator();
 		
@@ -59,6 +59,12 @@ public class Examinee {
 		return p;
 	}
 	
+	public Course getCourse(int courseId) {
+		if(mCourses == null)
+			loadCourse();
+		
+		return mCourses.get(courseId);
+	}
 	
 	public int getId() {
 		return mId;
@@ -74,9 +80,9 @@ public class Examinee {
 	
 	
 	private void loadCourse() {
-		mCursors = new HashMap<Integer, Course>();
-		mCursors.put(1, new Course(1, "培训评估表","19道题/20分钟"));
-		mCursors.put(2, new Course(2, "销售知识管理","10道题/10分钟"));
+		mCourses = new HashMap<Integer, Course>();
+		mCourses.put(1, new Course(1, "培训评估表","19道题/20分钟"));
+		mCourses.put(2, new Course(2, "销售知识管理","10道题/10分钟"));
 	}
 	
 	private Paper loadPaper(int courseId) {

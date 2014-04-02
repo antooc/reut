@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Paper {
-	int mCursorId;
+	int mCourseId;
 	int mTime;
 	boolean mAutoCheck = false; //是否自动判卷
 	PaperAnswer mAnswers;
@@ -12,7 +12,7 @@ public class Paper {
 	List<TestQuestion> mQuestions = new ArrayList<TestQuestion>(); 
 	
 	Paper(int cursorId, int time) {
-		mCursorId = cursorId;
+		mCourseId = cursorId;
 		mTime = time;
 	}
 	
@@ -42,13 +42,13 @@ public class Paper {
 		return mAnswers != null ? mAnswers.getCount() : 0;
 	}
 	
-	public int getCursorId() {
-		return mCursorId;
+	public int getCourseId() {
+		return mCourseId;
 	}
 	
 	public PaperAnswer getAnswers() {
 		if(mAnswers == null) {
-			mAnswers = new PaperAnswer(mCursorId);
+			mAnswers = new PaperAnswer(mCourseId);
 		}
 		return mAnswers;
 	}
