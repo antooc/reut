@@ -107,7 +107,14 @@ public class Paper {
 						.addBranch("南京")
 						.addBranch("深圳")
 						.setGroup(group)
-						.setModelAnswer("B"));
+						.setModelAnswer("B"))
+				.addQuestion(new TestQuestion(3, TestQuestion.TYPE_MULTI_SELECT, "下列那些车是德国")
+						.addBranch("大众")
+						.addBranch("奥迪")
+						.addBranch("别克")
+						.addBranch("宝马")
+						.setGroup(group)
+						.setModelAnswer("ABD"));
 		}
 		
 		if(id == 1)

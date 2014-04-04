@@ -3,6 +3,7 @@ package com.peice;
 import android.widget.CompoundButton;
 
 import com.peice.QuestionAdapter.OnAnswerChanged;
+import com.peice.common.SelectView;
 import com.peice.model.TestQuestion;
 
 public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
@@ -11,7 +12,7 @@ public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 		super(tq, onAnswerChanged);
 	}
 	
-	protected void onBrancheSelectChanged(CompoundButton btn, boolean checked){
+	protected void onBrancheSelectChanged(SelectView btn, boolean checked){
 		if(!checked)
 			return;
 		
@@ -25,7 +26,7 @@ public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 				onAnswerChanged();
 			}
 		}
-		
+		onAnswerFinished();
 	}
 	
 	@Override

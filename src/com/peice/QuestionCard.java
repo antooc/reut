@@ -29,6 +29,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 	
 	public static interface Listner {
 		public void onAnswer(TestQuestion tq, int idx);
+		public void onAnswerFinished(TestQuestion tq, int idx);
 	}
 	
 	////////////////////////
@@ -123,6 +124,13 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		mPaper.getAnswers().setAnswer(mQuestion.getId(), answer);
 		if(mListner != null) {
 			mListner.onAnswer(mQuestion, mQuestionIndex);
+		}
+	}
+
+	@Override
+	public void onAnswerFinished(TestQuestion tq, String answer) {
+		if(mListner != null) {
+			mListner.onAnswerFinished(mQuestion, mQuestionIndex);
 		}
 	}
 }

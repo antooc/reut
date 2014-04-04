@@ -54,7 +54,14 @@
    	</style>
    	
    	<style name="option_btn_single">
-   	    <item name="android:button">@drawable/option_btn_single</item>
+   	    <item name="android:textColor">@color/single_option_text</item>
+   	    <item name="android:background">@drawable/option_btn_single</item>
+   	    <item name="android:gravity">center</item>
+   	</style>
+   	<style name="option_btn_mutli">
+   	    <item name="android:background">@drawable/option_btn_multi</item>
+   	    <item name="android:textColor">@color/single_option_text</item>
+   	    <item name="android:gravity">center</item>
    	</style>
    	
    	<style name="button">

@@ -57,6 +57,17 @@ public class PaperActivity extends Activity implements
 	ViewPager    mContentView;
 	CheckBox     mMark;
 	
+	class GotoQuestionRunable implements Runnable{
+		public int nextId;
+
+		@Override
+		public void run() {
+			gotoQuestion(nextId);
+		}
+		
+	};
+	GotoQuestionRunable mGotoQuestion = new GotoQuestionRunable();
+	
 	static class PageViewManager<V extends View> {
 		List<V> mCached;
 		Map<Integer, V>  mUsing;
@@ -394,6 +405,12 @@ public class PaperActivity extends Activity implements
 	public void submitAnswer() {
 		// TODO submit the answer
 		
+	}
+
+	@Override
+	public void onAnswerFinished(TestQuestion tq, int idx) {
+		mGotoQuestion.nextId = idx + 1;
+		getWindow().getDecorView().postDelayed(mGotoQuestion, 500);
 	}
 	
 	

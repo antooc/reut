@@ -2,6 +2,7 @@ package com.peice;
 
 import java.util.List;
 
+import com.peice.common.SelectView;
 import com.peice.model.TestQuestion;
 
 import android.view.LayoutInflater;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 public class SelectQuestionAdapter extends QuestionAdapter{
 
-	protected CompoundButton[] mBtnBranches;
+	protected SelectView[] mBtnBranches;
 	
 	public SelectQuestionAdapter(TestQuestion tq, OnAnswerChanged onAnswerChanged) {
 		super(tq, onAnswerChanged);
@@ -27,19 +28,19 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 		if(branches == null || branches.size() <= 0)
 			return ;
 		
-		mBtnBranches = new CompoundButton[branches.size()];
+		mBtnBranches = new SelectView[branches.size()];
 		
 		for(int i = 0; i < branches.size(); i ++) {
 			View view = inflater.inflate(getResId(), null);
 			if(view == null)
 				continue;
 			
-			if(view instanceof TextView) {
-				((TextView)view).setText(branches.get(i));
-			}
-			
+				
 			//add listener
-			mBtnBranches[i] = (CompoundButton)view;
+			mBtnBranches[i] = (SelectView)view;
+			
+			mBtnBranches[i].setContent(branches.get(i));
+			mBtnBranches[i].setId(IdxToAnswer(i));
 			
 			mBtnBranches[i].setOnCheckedChangeListener(mOnCheckedChanged);
 			android.util.Log.i("==DJJ", "setupUI getBranchView SelectQuestion view="+view);
@@ -70,16 +71,16 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 		return R.layout.multi_select_item;
 	}
 	
-	private CompoundButton.OnCheckedChangeListener mOnCheckedChanged= new CompoundButton.OnCheckedChangeListener() {
+	private SelectView.OnCheckedChangeListener mOnCheckedChanged= new SelectView.OnCheckedChangeListener() {
 
 		@Override
-		public void onCheckedChanged(CompoundButton btn, boolean checked) {
+		public void onCheckedChanged(SelectView btn, boolean checked) {
 			onBrancheSelectChanged(btn, checked);
 		}
 		
 	};
 	
-	protected void onBrancheSelectChanged(CompoundButton btn, boolean checked) {
+	protected void onBrancheSelectChanged(SelectView btn, boolean checked) {
 		StringBuilder answer = new StringBuilder();
 		for(int i = 0; i < mBtnBranches.length; i++) {
 			if(mBtnBranches[i].isChecked()) {
@@ -89,5 +90,6 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 		setAnswer(answer.toString());
 		onAnswerChanged();
 	}
+	
 	
 }

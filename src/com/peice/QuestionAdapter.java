@@ -7,7 +7,7 @@ import com.peice.model.TestQuestion;
 
 public abstract class QuestionAdapter {
 	
-	private static final String[] ANSWSER_LIST = {"A","B","C","D","E","F","G"};
+	private static final String[] ANSWSER_LIST = {"A","B","C","D","E","F","G","H", "I", "J","K","M","L","N"};
 	public static String IdxToAnswer(int idx) {
 		return ANSWSER_LIST[idx];
 	}
@@ -15,6 +15,7 @@ public abstract class QuestionAdapter {
 	
 	public interface OnAnswerChanged {
 		public void onAnswerChanged(TestQuestion tq, String answer);
+		public void onAnswerFinished(TestQuestion tq, String answer);
 	}
 
 	private   OnAnswerChanged mOnAnswerChanged;
@@ -34,6 +35,12 @@ public abstract class QuestionAdapter {
 	protected void onAnswerChanged() {
 		if(mOnAnswerChanged != null) {
 			mOnAnswerChanged.onAnswerChanged(mQuestion, mAnswer);
+		}
+	}
+	
+	protected void onAnswerFinished() {
+		if(mOnAnswerChanged != null) {
+			mOnAnswerChanged.onAnswerFinished(mQuestion, mAnswer);
 		}
 	}
 	
