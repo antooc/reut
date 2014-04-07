@@ -49,19 +49,22 @@
         <item name="android:gravity">center</item>
     </style>
 
-   	<style name="option_btn_multi">
-   	    <item name="android:button">@drawable/option_btn_multi</item>
+   	<style name="select_view">
+   	    <item name="android:paddingTop">10dp</item>
+   	    <item name="android:paddingBottom">10dp</item>
    	</style>
+   	
    	
    	<style name="option_btn_single">
    	    <item name="android:textColor">@color/single_option_text</item>
    	    <item name="android:background">@drawable/option_btn_single</item>
    	    <item name="android:gravity">center</item>
+   	    <item name="android:layout_marginLeft">5dp</item>
+   	    <item name="android:layout_marginRight">5dp</item>
    	</style>
-   	<style name="option_btn_mutli">
+   	
+   	<style name="option_btn_multi" parent="option_btn_single">
    	    <item name="android:background">@drawable/option_btn_multi</item>
-   	    <item name="android:textColor">@color/single_option_text</item>
-   	    <item name="android:gravity">center</item>
    	</style>
    	
    	<style name="button">

@@ -114,7 +114,15 @@ public class Paper {
 						.addBranch("别克")
 						.addBranch("宝马")
 						.setGroup(group)
-						.setModelAnswer("ABD"));
+						.setModelAnswer("ABD"))
+				.addQuestion(new TestQuestion(4, TestQuestion.TYPE_FILL_VACANCY, "在太阳系,_(A)_是离地球最近的行星")
+						.setVacancyCount(1)
+						.setGroup(group)
+						.setModelAnswer("火星"))
+				.addQuestion(new TestQuestion(4, TestQuestion.TYPE_FILL_VACANCY, "中国的直辖市有北京、_(A)_, _(B)_, _(C)_")
+						.setVacancyCount(3)
+						.setGroup(group)
+						.setModelAnswer("天津\n上海\n重庆\n"));
 		}
 		
 		if(id == 1)

@@ -64,6 +64,8 @@ public abstract class QuestionAdapter {
 			return new SingleSelectQuestionAdapter(q,onac);
 		case TestQuestion.TYPE_MULTI_SELECT:
 			return new SelectQuestionAdapter(q,onac);
+		case TestQuestion.TYPE_FILL_VACANCY:
+			return new VacancyQuestionAdapter(q, onac);
 		case TestQuestion.TYPE_SHORT_ANSWER:
 			return new ShortAnswerQuestionAdapter(q,onac);
 		}

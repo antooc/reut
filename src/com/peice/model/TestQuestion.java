@@ -13,6 +13,7 @@ public class TestQuestion {
 	List<String>  mBranches; //题支
 	int   mType; //题型
 	int   mId; //试题的id
+	int   mVacancyCount;
 	QuestionGroup mGroup;
 	String mModelAnswer; //标准答案
 
@@ -34,6 +35,14 @@ public class TestQuestion {
 	
 	public boolean isObjectiveQuestion() {
 		return mType == TYPE_SIGNLE_SELECT || mType == TYPE_MULTI_SELECT;
+	}
+	
+	public TestQuestion setVacancyCount(int count) {
+		mVacancyCount = count;
+		return this;
+	}
+	public int getVacancyCount() {
+		return mVacancyCount;
 	}
 	
 	public TestQuestion setModelAnswer(String ma) {
