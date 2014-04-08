@@ -265,6 +265,14 @@ public class PaperActivity extends Activity implements
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setCustomView(view);
 		
+		final ImageButton backbtn = (ImageButton)actionBar.getCustomView().findViewById(android.R.id.home);
+		backbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
+		
 		mTitle = (TextView)view.findViewById(R.id.title);
 		mLeftTimes = (TextView)view.findViewById(R.id.time_left);
 		mMark = (CheckBox)view.findViewById(R.id.mark);

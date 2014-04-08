@@ -20,7 +20,7 @@
     <string name="logon_password">密码：</string>
     <string name="logon_logon">登录</string>
     <string name="logon_logingin">正在登录...</string>
-    <string name="logon_note">说明：\n\n培测序列号形如 1000020058-CYYDCG，前面的10位数字是帐号，后面的6位字母是密码，密码不区分大小写。</string>
+    <string name="logon_note">培测序列号形如 1000020058-CYYDCG，前面的10位数字是帐号，后面的6位字母是密码，密码不区分大小写。</string>
 
     <!-- 填写资料__界面信息所用字符串 -->
     <string name="fillout_title">填写资料</string>
@@ -39,7 +39,9 @@
     <string name="infohint_subject">科  目：</string>
     <string name="infohint_subjectcontent">1. 培训评估表\n2. 销售管理知识</string>
     <string name="infohint_hint">提  示：</string>
-    <string name="infohint_content">\n本次测试的成绩关系到各位的学分获取。\n\n</string>
+    <string name="infohint_content">本次测试的成绩关系到各位的学分获取。</string>
     <string name="infohint_next">下一步</string>
+    <string name="course_name">课程名称：</string>
+    <string name="course_desc">课程描述：</string>
 
 </resources>

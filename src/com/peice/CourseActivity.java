@@ -121,16 +121,15 @@ public class CourseActivity extends BaseActivity {
     	Dialog alertDialog = null;
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
-    	builder.setTitle("课程信息");
-    	String info = "课程名称：" + course.name +"\n"
-    			+ "课程描述：" + course.description +"\n";
-    	if(course.isComplete) {
-    		info += "您已经完成该课程";
-    	}
-    	else {
-    		info += "您尚未完成该课程";
-    	}
-    	builder.setMessage(info);
+    	builder.setTitle(mExaminee.getCaption());
+    	
+    	LayoutInflater inflater = LayoutInflater.from(this);
+    	final View view = inflater.inflate(R.layout.course_info_dialog, null);
+    	final TextView course_name = (TextView)view.findViewById(R.id.course_name);
+    	final TextView course_desc = (TextView)view.findViewById(R.id.course_desc);
+    	course_name.setText(course.name);
+    	course_desc.setText(course.description);
+    	builder.setView(view);
     	
     	if(course.isComplete) {
     		builder.setPositiveButton("返回", new DialogInterface.OnClickListener() {
@@ -141,7 +140,7 @@ public class CourseActivity extends BaseActivity {
     		    });
     	}
     	else {
-    		builder.setPositiveButton("开始课程", new DialogInterface.OnClickListener() {
+    		builder.setPositiveButton("开始答题", new DialogInterface.OnClickListener() {
    		     @Override
    		     public void onClick(DialogInterface dialog, int which) {
    		    	 dialog.dismiss();

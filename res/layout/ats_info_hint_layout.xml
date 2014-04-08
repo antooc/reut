@@ -43,6 +43,7 @@
         android:background="@color/question_group_bg"
         android:orientation="vertical"
         android:padding="1dp"
+        android:paddingBottom="20dp"
         android:stretchColumns="1" >
 
         <TableRow
@@ -56,17 +57,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/infohint_name"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_infohint_namecontent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tv_infohint_name"
+				android:layout_gravity="top"
+                android:layout_weight="1"
                 android:text="张小三"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -84,13 +84,12 @@
 
             <TextView
                 android:id="@+id/tv_infohint_itemcontent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tv_infohint_item"
+				android:layout_gravity="top"
+                android:layout_weight="1"
                 android:text="大客户部销售经理培训"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -104,17 +103,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/infohint_timelong"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_infohint_timelongcontent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tv_infohint_timelong"
+                android:layout_gravity="top"
+                android:layout_weight="1"
                 android:text="30 分钟"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -132,13 +130,12 @@
 
             <TextView
                 android:id="@+id/tv_infohint_subject1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tv_infohint_subject"
+                android:layout_gravity="top"
+                android:layout_weight="1"
                 android:text="@string/infohint_subjectcontent"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
         </TableRow>
 
@@ -153,19 +150,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/infohint_hint"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_infohint_hintcontent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tv_infohint_hint"
                 android:text="@string/infohint_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="#436eee"
                 android:textSize="20sp" />
-
         </TableRow>
 
     </TableLayout>
@@ -174,8 +170,6 @@
         android:id="@+id/infohintLinearLayoutNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/infohintTableLayoutInfo"
-        android:layout_alignParentLeft="true"
         android:orientation="vertical" >
 
         <Button

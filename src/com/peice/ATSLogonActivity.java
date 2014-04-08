@@ -117,13 +117,13 @@ public class ATSLogonActivity extends BaseActivity {
     private boolean valudate() {
         String userName = logonNameEdit.getText().toString().trim();
         if (userName.equals("")) {
-            showDialog("�û����Ǳ����");
+            showDialog("用户名不能为空");
             return false;
         }
 
         String password = logonPasswordEdit.getText().toString().trim();
         if (password.equals("")) {
-            showDialog("�����Ǳ����");
+            showDialog("密码不能为空");
             return false;
         }
 
