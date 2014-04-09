@@ -381,17 +381,12 @@ public class PaperActivity extends Activity implements
 		if(index < mPaper.count()) //questions
 		{
 			TestQuestion tq = mPaper.get(index);
-			mTitle.setText("");
 			if(tq != null) {
 				QuestionGroup qg = tq.getGroup();
-				if(qg != null){
-					mTitle.setText(qg.getTrunk());
-				}
 				mMark.setChecked(mPaper.getAnswers().isQuestionMark(tq.getId()));
 			}
 		}
 		else {
-			mTitle.setText("答案");
 			mMark.setChecked(false);
 		}
 			

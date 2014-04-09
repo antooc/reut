@@ -20,42 +20,40 @@
 
     </FrameLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rlFosterTestEvaluation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/llStartupVesion" >
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:baselineAlignedChildIndex="1" >
 
-        <ImageView
-            android:id="@+id/atsStartupImageView"
+        <TextView
+            android:id="@+id/peice_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:scaleType="fitStart"
-            android:src="@drawable/ats_foster_test" />
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#cc080808"
+            android:text="@string/startup_peice" />
 
         <TextView
             android:id="@+id/evaluation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/atsStartupImageView"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/atsStartupImageView"
+            android:layout_marginLeft="10dp"
+            android:textColor="#cc0c0c0c"
             android:text="@string/startup_evaluation" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/llStartupVesion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/vesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/startup_vesion" />
     </LinearLayout>
+
+     <TextView
+         android:id="@+id/vesion"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="30dp"
+         android:layout_marginBottom="10dp"
+         android:textColor="#cc888888"
+         android:text="@string/startup_vesion" />
 
 </LinearLayout>

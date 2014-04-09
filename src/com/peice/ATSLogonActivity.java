@@ -133,7 +133,7 @@ public class ATSLogonActivity extends BaseActivity {
     private void showDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg) .setCancelable(false)
-            .setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     logonButton.setText(R.string.logon_logon);
                 }
