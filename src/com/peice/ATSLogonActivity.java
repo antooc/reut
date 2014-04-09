@@ -91,7 +91,7 @@ public class ATSLogonActivity extends BaseActivity {
         tv_hint.setTextColor(Color.RED);
     }
 
-    // ��鿼��״̬
+    // 检查考试状态
     private boolean validTestStatus() {
         return false;
     }
@@ -133,7 +133,7 @@ public class ATSLogonActivity extends BaseActivity {
     private void showDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg) .setCancelable(false)
-            .setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     logonButton.setText(R.string.logon_logon);
                 }
@@ -151,17 +151,17 @@ public class ATSLogonActivity extends BaseActivity {
         return new JSONObject(ATSHttpUtil.postRequest(url, map));
     }
 
-    // ����û���������ѯ
+    // 根据用户名称密码查询
     private String queryC(String account, String password) throws Exception {
-        // ��ѯ����
+        // 查询参数
         String queryString = "account=" + account + "&password=" + password;
         // url
         String url = ATSHttpUtil.BASE_URL + "servlet/tbl_proj_cand?" + queryString;
-        // ��ѯ���ؽ��
+        // 查询返回结果
         return ATSHttpUtil.queryStringForPost(url);
     }
 
-    // MD5���ܣ�32λ 
+    // MD5加密，32位 
     public static String MD5(String str) { 
         MessageDigest md5 = null; 
         try { 
@@ -193,7 +193,7 @@ public class ATSLogonActivity extends BaseActivity {
         return hexValue.toString(); 
     } 
      
-    // ����ļ����㷨 
+    // 可逆的加密算法 
     public static String encryptMD5(String str) { 
         char[] a = str.toCharArray(); 
 
