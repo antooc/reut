@@ -1,14 +1,16 @@
 package com.peice;
 
+import java.util.Iterator;
+
 import android.widget.CompoundButton;
 
 import com.peice.QuestionAdapter.OnAnswerChanged;
 import com.peice.common.SelectView;
-import com.peice.model.TestQuestion;
+import com.peice.model.Question;
 
 public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 	
-	public SingleSelectQuestionAdapter(TestQuestion tq, OnAnswerChanged onAnswerChanged) {
+	public SingleSelectQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
 		super(tq, onAnswerChanged);
 	}
 	
@@ -16,16 +18,20 @@ public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 		if(!checked)
 			return;
 		
-		for(int i = 0; i < mBtnBranches.length; i++) {
-			if(mBtnBranches[i] != btn)
-				mBtnBranches[i].setChecked(false);
-			else {
-				StringBuilder b = new StringBuilder();
-				b.append(IdxToAnswer(i));
-				setAnswer(b.toString());
+		Iterator<String> keyit = mBtnBranches.keySet().iterator();
+		while (keyit.hasNext()) {
+			String key = keyit.next();
+			SelectView view = mBtnBranches.get(key);
+			
+			if (view == btn) {
+				setAnswer(key);
 				onAnswerChanged();
 			}
+			else {
+				view.setChecked(false);
+			}
 		}
+		
 		onAnswerFinished();
 	}
 	

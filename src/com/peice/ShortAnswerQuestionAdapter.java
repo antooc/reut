@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.peice.QuestionAdapter.OnAnswerChanged;
-import com.peice.model.TestQuestion;
+import com.peice.model.Question;
 
 public class ShortAnswerQuestionAdapter extends QuestionAdapter{
 	
 	TextView mAnswerView;
 	
-	public ShortAnswerQuestionAdapter(TestQuestion tq, OnAnswerChanged onAnswerChanged) {
+	public ShortAnswerQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
 		super(tq, onAnswerChanged);
 	}
 	

@@ -21,14 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.peice.common.BaseActivity;
-import com.peice.model.Course;
-import com.peice.model.ExamineeManager;
-import com.peice.model.Examinee;
+import com.peice.model.Candidate;
+import com.peice.model.DataManager;
+import com.peice.model.Test;
 
 public class CourseActivity extends BaseActivity {
 	private ListView mCourseList;
 	private Adapter mAdapter;
-	private Examinee mExaminee;
+	private Candidate mCandidate;
 	
 	static private class ViewHolder {
 		TextView name;
@@ -37,8 +37,8 @@ public class CourseActivity extends BaseActivity {
 	}
 	
 	class Adapter extends BaseAdapter {
-		private List<Course> mList;
-		public Adapter(List<Course> course) {
+		private List<Test> mList;
+		public Adapter(List<Test> course) {
 			mList = course;
 		}
 		
@@ -74,11 +74,11 @@ public class CourseActivity extends BaseActivity {
 				view.setTag(holder);
 			}
 			
-			Course course = (Course)getItem(position);
+			Test test = (Test)getItem(position);
 			
-			holder.name.setText(course.name);
-			holder.description.setText(course.description);
-			holder.complete.setChecked(course.isComplete);
+			holder.name.setText(test.getName());
+			holder.description.setText(test.getDescription());
+			holder.complete.setChecked(test.isComplete());
 			
 			return view;
 		}
@@ -91,11 +91,10 @@ public class CourseActivity extends BaseActivity {
     	setContentView(R.layout.course_content);
     	mCourseList = (ListView)findViewById(R.id.course_list);
         
-        //TODO 
-        mExaminee = ExamineeManager.getManager().login("doon", "1234");
+        mCandidate = DataManager.getInstance().getCandidate();
         
         
-        mAdapter = new Adapter(getCourse());
+        mAdapter = new Adapter(getTests());
         mCourseList.setAdapter(mAdapter);
         mCourseList.setOnItemClickListener(new OnItemClickListener() {
         	@Override
@@ -108,30 +107,34 @@ public class CourseActivity extends BaseActivity {
     @Override
     public void onStart() {
     	super.onStart();
-    	setTitle(mExaminee.getCaption());
+    	setTitle(getCaption());
+    }
+    
+    private String getCaption() {
+    	return "【"+  mCandidate.getName() + "】" + mCandidate.getProjectName();
     }
     
     private void onCourseClicked(int pos) {
-    	final Course course = (Course)mAdapter.getItem(pos);
+    	final Test test = (Test)mAdapter.getItem(pos);
     	
-    	if(course == null)
+    	if(test == null)
     		return;
     	
     	//Show Alert
     	Dialog alertDialog = null;
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
-    	builder.setTitle(mExaminee.getCaption());
+    	builder.setTitle(getCaption());
     	
     	LayoutInflater inflater = LayoutInflater.from(this);
     	final View view = inflater.inflate(R.layout.course_info_dialog, null);
     	final TextView course_name = (TextView)view.findViewById(R.id.course_name);
     	final TextView course_desc = (TextView)view.findViewById(R.id.course_desc);
-    	course_name.setText(course.name);
-    	course_desc.setText(course.description);
+    	course_name.setText(test.getName());
+    	course_desc.setText(test.getDescription());
     	builder.setView(view);
     	
-    	if(course.isComplete) {
+    	if(test.isComplete()) {
     		builder.setPositiveButton("返回", new DialogInterface.OnClickListener() {
     		     @Override
     		     public void onClick(DialogInterface dialog, int which) {
@@ -144,7 +147,7 @@ public class CourseActivity extends BaseActivity {
    		     @Override
    		     public void onClick(DialogInterface dialog, int which) {
    		    	 dialog.dismiss();
-   		    	 startCourse(course);
+   		    	 startCourse(test);
    		     }
    		    });
     		builder.setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -159,19 +162,18 @@ public class CourseActivity extends BaseActivity {
     	alertDialog.show();
     }
     
-    private void startCourse(Course course) {
+    private void startCourse(Test test) {
     	Intent intent = new Intent();
     	intent.setClass(this, PaperActivity.class);
-    	intent.putExtra(PaperActivity.EXAMINEE_ID, mExaminee.getId());
-    	intent.putExtra(PaperActivity.COURSE_ID, course.id);
+    	intent.putExtra(PaperActivity.TEST_ID, test.getId());
     	startActivity(intent);
     }
 
 
     
     
-    private List<Course> getCourse() {
-    	return mExaminee.queryCourse();
+    private List<Test> getTests() {
+    	return mCandidate.getTests();
     }
     
 }

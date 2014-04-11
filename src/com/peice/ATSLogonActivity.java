@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ import android.widget.TextView;
 
 import com.peice.common.BaseActivity;
 import com.peice.model.ATSHttpUtil;
+import com.peice.model.Candidate;
+import com.peice.model.DataManager;
 
 public class ATSLogonActivity extends BaseActivity {
 
@@ -31,6 +34,7 @@ public class ATSLogonActivity extends BaseActivity {
     private EditText logonPasswordEdit;
     private Button logonButton;
     private LinearLayout ll_Hint;
+    private Handler handle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,16 @@ public class ATSLogonActivity extends BaseActivity {
 
         logonButton = (Button) findViewById(R.id.logon_button);
         logonButton.setOnClickListener(logonListener);
+        
+        handle = new Handler() {
+        	@Override
+            public void handleMessage(Message msg) {
+        		if (msg.what != DataManager.MSG_LOGIN) {
+        			return ;
+        		}
+        		onLogon((Candidate)msg.obj);
+        	}
+        };
     }
 
     @Override
@@ -61,18 +75,28 @@ public class ATSLogonActivity extends BaseActivity {
             logonButton.setText(R.string.logon_logingin);
 
             if (valudate()) {
-                if (loginProcess()) {
-                    if (validTestStatus()) {
-                        enterNextActivity(ATSInfoHintActivity.class);
-                    } else {
-                        enterNextActivity(ATSFilloutInfoActivity.class);
-                    }
-                } else {
-                    showHintView();
-                }
+            	loginProcess();
             }
         }
     };
+    
+    private void onLogon(Candidate cand) {
+    	if (cand != null) {
+    		if(cand.getLoginStatus() == Candidate.STATUS_OK) {
+    			if (cand.getName().equals(Candidate.NEWNAME)) {
+    				enterNextActivity(ATSFilloutInfoActivity.class);
+    			}
+    			else {
+    				enterNextActivity(ATSInfoHintActivity.class);
+    			}
+    			return;
+    		}
+    		showHintView(cand.getLoginResult());
+    	}
+    	else {
+    		showHintView(null);
+    	}
+    }
 
     private void enterNextActivity(Class<?> cls) {
         Intent intent = new Intent();
@@ -82,36 +106,26 @@ public class ATSLogonActivity extends BaseActivity {
         finish();
     }
 
-    private void showHintView() {
+    private void showHintView(String result) {
         final TextView tv_hint = new TextView(this);
 
         ll_Hint.removeAllViews();
         ll_Hint.addView(tv_hint);
-        tv_hint.setText(getString(R.string.logon_hint));
+        tv_hint.setText(result == null ? getString(R.string.logon_hint) : result);
         tv_hint.setTextColor(Color.RED);
     }
 
     // ��鿼��״̬
-    private boolean validTestStatus() {
+    /*private boolean validTestStatus() {
         return false;
-    }
+    }*/
 
-    private boolean loginProcess() {
-        String userName = logonNameEdit.getText().toString();
-        String password = MD5(logonPasswordEdit.getText().toString());
-        JSONObject jsonObj;
-
-        try {
-            jsonObj = query(userName, password);
-            if (jsonObj.getInt("userId") > 0) {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-        // return false;
+    private void loginProcess() {
+    	
+        DataManager.getInstance().login(
+        			logonNameEdit.getText().toString().trim(), 
+        			logonPasswordEdit.getText().toString().trim(), 
+        			handle);
     }
 
     private boolean valudate() {
@@ -142,7 +156,7 @@ public class ATSLogonActivity extends BaseActivity {
         alert.show();
     }
 
-    private JSONObject query(String userName, String password) throws Exception {
+    /*private JSONObject query(String userName, String password) throws Exception {
         Map<String, String> map = new HashMap<String, String>();
         map.put("candname", userName);
         map.put("pass", password);
@@ -204,6 +218,6 @@ public class ATSLogonActivity extends BaseActivity {
         String s = new String(a); 
 
         return s; 
-    }
+    }*/
 }
 

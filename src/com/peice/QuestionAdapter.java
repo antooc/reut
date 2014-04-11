@@ -3,7 +3,7 @@ package com.peice;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.peice.model.TestQuestion;
+import com.peice.model.Question;
 
 public abstract class QuestionAdapter {
 	
@@ -14,16 +14,16 @@ public abstract class QuestionAdapter {
 	
 	
 	public interface OnAnswerChanged {
-		public void onAnswerChanged(TestQuestion tq, String answer);
-		public void onAnswerFinished(TestQuestion tq, String answer);
+		public void onAnswerChanged(Question tq, String answer);
+		public void onAnswerFinished(Question tq, String answer);
 	}
 
 	private   OnAnswerChanged mOnAnswerChanged;
-	protected TestQuestion mQuestion;
+	protected Question mQuestion;
 	
 	private String mAnswer;
 	
-	public QuestionAdapter(TestQuestion question, OnAnswerChanged onAnswerChanged) {
+	public QuestionAdapter(Question question, OnAnswerChanged onAnswerChanged) {
 		mQuestion = question;
 		mOnAnswerChanged = onAnswerChanged;
 	}
@@ -57,16 +57,16 @@ public abstract class QuestionAdapter {
 		return mAnswer;
 	}
 	
-	public static QuestionAdapter getAdapter(TestQuestion q, OnAnswerChanged onac) {
+	public static QuestionAdapter getAdapter(Question q, OnAnswerChanged onac) {
 		
 		switch(q.getType()) {
-		case TestQuestion.TYPE_SIGNLE_SELECT:
+		case Question.TYPE_SIGNLE_SELECT:
 			return new SingleSelectQuestionAdapter(q,onac);
-		case TestQuestion.TYPE_MULTI_SELECT:
+		case Question.TYPE_MULTI_SELECT:
 			return new SelectQuestionAdapter(q,onac);
-		case TestQuestion.TYPE_FILL_VACANCY:
+		case Question.TYPE_VACANCY:
 			return new VacancyQuestionAdapter(q, onac);
-		case TestQuestion.TYPE_SHORT_ANSWER:
+		case Question.TYPE_SHORT_ANSWER:
 			return new ShortAnswerQuestionAdapter(q,onac);
 		}
 		return null;

@@ -1,7 +1,6 @@
 package com.peice;
 
-import com.peice.QuestionAdapter.OnAnswerChanged;
-import com.peice.model.TestQuestion;
+import com.peice.model.Question;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -51,7 +50,7 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 	}
 	
 	
-	public VacancyQuestionAdapter(TestQuestion question, OnAnswerChanged onAnswerChanged) {
+	public VacancyQuestionAdapter(Question question, OnAnswerChanged onAnswerChanged) {
 		super(question, onAnswerChanged);
 	}
 
@@ -61,7 +60,7 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 		if(mQuestion == null)
 			return ;
 		
-		int branchCount = mQuestion.getVacancyCount();
+		int branchCount = mQuestion.getBranchCount();
 		
 		if(branchCount <= 0)
 			return ;
@@ -94,7 +93,7 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 	@Override
 	public void onAnswerUpdated() {
 		// TODO Auto-generated method stub
-		if(mQuestion.getVacancyCount() <= 0 || getAnswer() == null)
+		if(mQuestion.getBranchCount() <= 0 || getAnswer() == null)
 			return;
 		
 		String[] answers = getAnswer().split("\n");

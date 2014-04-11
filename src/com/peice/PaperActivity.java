@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.peice.model.Examinee;
-import com.peice.model.ExamineeManager;
-import com.peice.model.Paper;
-import com.peice.model.PaperAnswer;
+import com.peice.model.Candidate;
+import com.peice.model.DataManager;
+import com.peice.model.Question;
 import com.peice.model.QuestionGroup;
-import com.peice.model.TestQuestion;
+import com.peice.model.Test;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,15 +38,14 @@ public class PaperActivity extends Activity implements
 	
 	static final String TAG="PaperActivity";
 	
-	static public final String COURSE_ID = "course_id";
-	static public final String PAPER_ID = "paper_id";
-	static public final String EXAMINEE_ID = "examinee_id";
-	static public final String QUESTION_ID = "question_id";
+	static public final String TEST_ID = "course_id";
 	
 	TextView mLeftTimes;
 	TextView mTitle;
-	Paper    mPaper;
-	Examinee mExaminee;
+	
+	Candidate mCandidate;
+	Test      mTest;
+	
 	int      mCurrentQuestion;
 	ProgressBar mAnswerProgress;
 	ImageButton mShowAnswerCard;
@@ -56,6 +55,7 @@ public class PaperActivity extends Activity implements
 	MyPagerAdapter mPagerAdapter;
 	ViewPager    mContentView;
 	CheckBox     mMark;
+	Handler      mHandler;
 	
 	class GotoQuestionRunable implements Runnable{
 		public int nextId;
@@ -102,14 +102,14 @@ public class PaperActivity extends Activity implements
 		PageViewManager<QuestionCard>  mQuestionCardManager = new PageViewManager<QuestionCard>();
 		PageViewManager<AnswerCard>    mAnswerCardManager = new PageViewManager<AnswerCard>();
 		
-		private QuestionCard  getQuestionCard(TestQuestion tq, int poistion) {
+		private QuestionCard  getQuestionCard(Question q, int poistion) {
 			QuestionCard card = mQuestionCardManager.getCached();
 			if(card == null) {
 				card = new QuestionCard(PaperActivity.this, null);
 			}
 			
-			card.init(mExaminee, mPaper, PaperActivity.this);
-			card.setQuestion(tq, poistion);
+			card.init(mCandidate, mTest, PaperActivity.this);
+			card.setQuestion(q, poistion);
 			mQuestionCardManager.putUsing(poistion, card);
 			
 			return card;
@@ -120,7 +120,7 @@ public class PaperActivity extends Activity implements
 			if(card == null) {
 				card = new AnswerCard(PaperActivity.this, null);
 			}
-			card.setPaper(mPaper);
+			card.setTest(mTest);
 			card.setListener(PaperActivity.this);
 			mAnswerCardManager.putUsing(postion, card);
 			return card;
@@ -129,7 +129,7 @@ public class PaperActivity extends Activity implements
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mPaper != null ? mPaper.count() + 1 :  0;
+			return mTest != null ? mTest.getQuestionCount() + 1 :  0;
 		}
 
 		@Override
@@ -138,7 +138,7 @@ public class PaperActivity extends Activity implements
 			if(view instanceof QuestionCard && ((QuestionCard)view).getQuestion() == data) {
 				return true;
 			}
-			else if(view instanceof AnswerCard && data instanceof PaperAnswer) {
+			else if(view instanceof AnswerCard && data instanceof Test) {
 				return true;
 			}
 			return false;
@@ -147,7 +147,7 @@ public class PaperActivity extends Activity implements
 		@Override
 		public void destroyItem(View container, int position, Object object) {
 			View view = null;
-			if(position == mPaper.count()) //answer
+			if(position == mTest.getQuestionCount()) //answer
 			{
 				view = mAnswerCardManager.remove(position);
 			}
@@ -160,14 +160,14 @@ public class PaperActivity extends Activity implements
 		
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			if(position == mPaper.count()) //answer
+			if(position == mTest.getQuestionCount()) //answer
 			{
 				AnswerCard card = getAnswerCard(position);
 				container.addView(card);
-				return mPaper.getAnswers();
+				return mTest;
 			}
 			else {
-				TestQuestion tq = mPaper.get(position);
+				Question tq = mTest.getQuestion(position);
 				QuestionCard card = getQuestionCard(tq, position);
 				container.addView(card);
 				return tq;
@@ -220,36 +220,47 @@ public class PaperActivity extends Activity implements
 		
 		Intent intent = getIntent();
 		
-		int courseId = intent.getIntExtra(COURSE_ID, 0);
-		int examineeId = intent.getIntExtra(EXAMINEE_ID, 0);
-		mExaminee = ExamineeManager.getManager().get(examineeId);
+		String testId = intent.getStringExtra(TEST_ID);
+		mCandidate = DataManager.getInstance().getCandidate();
 
-		if(mExaminee == null) {
-			Log.e(TAG, "Cannot Get the Examinee by Id=" + examineeId);
-			return;
-		}
-		mPaper = mExaminee.getPapder(courseId);
-		if(mPaper == null) {
-			Log.e(TAG, "Cannot Find the Paper for Course:"+courseId);
+		if(mCandidate == null) {
+			Log.e(TAG, "Cannot Get the Candidate");
 			return;
 		}
 		
+
 		mCurrentQuestion = 0;
 		
 		setContentView(R.layout.paper_frame);
-		
 		mContentView = (ViewPager)findViewById(R.id.viewpager);
-		mPagerAdapter = new MyPagerAdapter();
-		mContentView.setAdapter(mPagerAdapter);
-		mContentView.setOnPageChangeListener(this);
 		
-		//mAnswerProgress = (ProgressBar)findViewById(R.id.question_progress);
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what != DataManager.MSG_QUERY_TEST) {
+					return;
+				}
+				
+				mTest = (Test)msg.obj;
+				if (mTest == null) {
+					Log.e("PapaerAcitivty", "Invalidate Test");
+					finish();
+					return ;
+				}
 		
-		mLeftSeconds = 0;
+				mPagerAdapter = new MyPagerAdapter();
+				mContentView.setAdapter(mPagerAdapter);
+				mContentView.setOnPageChangeListener(PaperActivity.this);
 		
+				mLeftSeconds = 0;
+				
+				onPageSelected(0);
+				setTime(mTest.getTimeLength() * 60);
+				startTimer();
+			}
+		};
 		
-		//mAnswerProgress.setMax(mPaper.count());
-		
+		DataManager.getInstance().queryTest(testId, mHandler);
 		
 	}
 	
@@ -287,23 +298,24 @@ public class PaperActivity extends Activity implements
 		mShowAnswerCard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				mContentView.setCurrentItem(mPaper.count()+1);
+				mContentView.setCurrentItem(mTest.getQuestionCount()+1);
 			}
 		});
-		onPageSelected(0);
-		setTime(mPaper.getTime());
-		startTimer();
 		
-		mTitle.setText(mExaminee.getCaption());
+		mTitle.setText(getCaption());
 		
 	}
+	
+    private String getCaption() {
+    	return "【"+  mCandidate.getName() + "】" + mCandidate.getProjectName();
+    }
 	
 	
 	private void onMarkChanged(boolean checked) {
 		Log.i("==DJJ", "onMarkChanged, currentQuestion="+mCurrentQuestion+",checked="+checked);
-		if(mCurrentQuestion >= 0 && mCurrentQuestion < mPaper.count()) {
-			TestQuestion tq = mPaper.get(mCurrentQuestion);
-			mPaper.getAnswers().setQuestionMark(tq.getId(), checked);
+		if(mCurrentQuestion >= 0 && mCurrentQuestion < mTest.getQuestionCount()) {
+			Question tq = mTest.getQuestion(mCurrentQuestion);
+			mTest.setQuestionMark(tq.getId(), checked);
 		}
 	}
 	
@@ -344,18 +356,6 @@ public class PaperActivity extends Activity implements
 			mLeftTimes.setText( (mLeftSeconds/60) + ":" + (mLeftSeconds%60));
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		if(resultCode == 1) {
-			int qid = data.getIntExtra(QUESTION_ID, 0);
-			if(qid == 0)
-				return;
-			
-			gotoQuestion(qid);
-		}
-	}
-
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
@@ -377,13 +377,12 @@ public class PaperActivity extends Activity implements
 	@Override
 	public void onPageSelected(int index) {
 		mCurrentQuestion = index;
-		enableToolButtons(index >= 0 && index < mPaper.count());
-		if(index < mPaper.count()) //questions
+		enableToolButtons(index >= 0 && index < mTest.getQuestionCount());
+		if(index < mTest.getQuestionCount()) //questions
 		{
-			TestQuestion tq = mPaper.get(index);
+			Question tq = mTest.getQuestion(index);
 			if(tq != null) {
-				QuestionGroup qg = tq.getGroup();
-				mMark.setChecked(mPaper.getAnswers().isQuestionMark(tq.getId()));
+				mMark.setChecked(mTest.isQuestionMark(tq.getId()));
 			}
 		}
 		else {
@@ -393,13 +392,13 @@ public class PaperActivity extends Activity implements
 	}
 
 	@Override
-	public void onAnswer(TestQuestion tq, int idx) {
+	public void onAnswer(Question tq, int idx) {
 		//mAnswerProgress.setProgress(mPaper.getAnswerCount());
 	}
 
 	@Override
 	public void gotoQuestion(int index) {
-		if(mPaper == null)
+		if(mTest == null)
 			return;
 		mContentView.setCurrentItem(index);
 	}
@@ -411,7 +410,7 @@ public class PaperActivity extends Activity implements
 	}
 
 	@Override
-	public void onAnswerFinished(TestQuestion tq, int idx) {
+	public void onAnswerFinished(Question tq, int idx) {
 		mGotoQuestion.nextId = idx + 1;
 		getWindow().getDecorView().postDelayed(mGotoQuestion, 500);
 	}

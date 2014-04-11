@@ -1,9 +1,8 @@
 package com.peice;
 
-import com.peice.model.Course;
-import com.peice.model.Examinee;
-import com.peice.model.Paper;
-import com.peice.model.TestQuestion;
+import com.peice.model.Candidate;
+import com.peice.model.Question;
+import com.peice.model.Test;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -22,14 +21,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswerChanged{
-	Paper mPaper;
+	Test mTest;
 	int   mQuestionIndex;
-	TestQuestion mQuestion;
-	Examinee mExaminee;
+	Question mQuestion;
+	Candidate mCandidate;
 	
 	public static interface Listner {
-		public void onAnswer(TestQuestion tq, int idx);
-		public void onAnswerFinished(TestQuestion tq, int idx);
+		public void onAnswer(Question tq, int idx);
+		public void onAnswerFinished(Question tq, int idx);
 	}
 	
 	////////////////////////
@@ -63,11 +62,11 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		Log.i("==DJJ", "QuestionCard Layout="+l+","+t+","+r+","+b);
 	}
 	
-	public TestQuestion getQuestion() {
+	public Question getQuestion() {
 		return mQuestion;
 	}
 	
-	public void setQuestion(TestQuestion q, int index) {
+	public void setQuestion(Question q, int index) {
 		mQuestionIndex = index;
 		if(mQuestion == q)
 			return;
@@ -75,9 +74,9 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		setupUI();
 	}
 	
-	public void init(Examinee examinee, Paper paper, Listner listner) {
-		mExaminee = examinee;
-		mPaper = paper;
+	public void init(Candidate cand, Test test, Listner listner) {
+		mCandidate = cand;
+		mTest = test;
 		mListner = listner;
 	}
 	
@@ -86,7 +85,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		String sindex = Integer.toString(mQuestionIndex+1);
 		text.append(sindex);
 		text.append("/");
-		text.append(Integer.toString(mPaper.count()));
+		text.append(Integer.toString(mTest.getQuestionCount()));
 		text.setSpan(new ForegroundColorSpan(Color.BLUE), 0, sindex.length(),   
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		text.setSpan(new AbsoluteSizeSpan(40), 0, sindex.length(), 0);
@@ -96,8 +95,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 	
 	private void setupUI() {
 
-		Course course = mExaminee.getCourse(mPaper.getCourseId());
-		mTitle.setText(course.name);
+		mTitle.setText(mTest.getName());
 		updateQuestionCount();
 		
 		
@@ -111,7 +109,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 			mQuestionAdapter.getBranchView(mBranchesContainer, LayoutInflater.from(getContext()));
 			//mBranchesContainer.measure(mBranchesContainer.getMeasuredWidth(), mBranchesContainer.getMeasuredHeight());
 			
-			String answer = mPaper.getAnswers().getAnswer(mQuestion.getId());
+			String answer = mTest.getAnswer(mQuestion.getId());
 			if(answer != null) {
 				mQuestionAdapter.updateAnswer(answer);
 			}
@@ -119,16 +117,16 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 	}
 
 	@Override
-	public void onAnswerChanged(TestQuestion tq, String answer) {
+	public void onAnswerChanged(Question tq, String answer) {
 		// TODO Auto-generated method stub
-		mPaper.getAnswers().setAnswer(mQuestion.getId(), answer);
+		mTest.setAnswer(mQuestion.getId(), answer);
 		if(mListner != null) {
 			mListner.onAnswer(mQuestion, mQuestionIndex);
 		}
 	}
 
 	@Override
-	public void onAnswerFinished(TestQuestion tq, String answer) {
+	public void onAnswerFinished(Question tq, String answer) {
 		if(mListner != null) {
 			mListner.onAnswerFinished(mQuestion, mQuestionIndex);
 		}

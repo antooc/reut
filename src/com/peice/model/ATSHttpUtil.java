@@ -45,7 +45,7 @@ public class ATSHttpUtil {
             params.add(new BasicNameValuePair(key, rawParams.get(key)));
         }
 
-        post.setEntity(new UrlEncodedFormEntity(params, "gbk"));
+        post.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
 
         HttpResponse httpResponse = httpClient.execute(post);
 

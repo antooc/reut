@@ -1,17 +1,24 @@
 
 package com.peice;
 
+import java.util.List;
+
 import com.peice.common.BaseActivity;
+import com.peice.model.Candidate;
+import com.peice.model.DataManager;
+import com.peice.model.Test;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 // import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class ATSInfoHintActivity extends BaseActivity {
@@ -30,6 +37,35 @@ public class ATSInfoHintActivity extends BaseActivity {
 
         // infohintImageButton = (ImageButton) findViewById(R.id.infohintImageButtonArrow);
         // infohintImageButton.setOnClickListener(infohintArrowListener);
+
+        Candidate cand = DataManager.getInstance().getCandidate();
+        if (cand != null) {
+        	setInfo(R.id.tv_infohint_itemcontent, cand.getName());
+        	setInfo(R.id.tv_infohint_itemcontent, cand.getProjectName());
+        	setInfo(R.id.tv_infohint_hintcontent, cand.getNotice());
+        	
+        	List<Test> tests = cand.getTests();
+        	int total_len = 0;
+        	StringBuilder testlist = new StringBuilder();
+        	for (int i = 0; i < tests.size(); i ++) {
+        		total_len += tests.get(i).getTimeLength();
+        		if (i != 0) {
+        			testlist.append("\n");
+        		}
+        		testlist.append(Integer.toString(i+1) + ". ");
+        		testlist.append(tests.get(i).getName());
+        	}
+        	setInfo(R.id.tv_infohint_timelongcontent, Integer.toString(total_len) + "min");
+        	setInfo(R.id.tv_infohint_subject1, testlist.toString());
+        }
+        
+    }
+    
+    private void setInfo(int id, String str) {
+    	TextView textview = (TextView)findViewById(id);
+    	if (textview != null) {
+    		textview.setText(str);
+    	}
     }
 
     @Override

@@ -1,11 +1,8 @@
 package com.peice;
 
-import java.util.HashMap;
-import java.util.Map;
 
-import com.peice.model.Paper;
-import com.peice.model.PaperAnswer;
-import com.peice.model.TestQuestion;
+import com.peice.model.Question;
+import com.peice.model.Test;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,9 +14,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
-public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChanged {
-	PaperAnswer mAnswer;
-	Paper       mPaper;
+public class AnswerCard extends FrameLayout implements Test.OnAnswerChanged {
+	Test    mTest;
 	
 	GridView  mGridView;
 	Button    mSubmit;
@@ -47,13 +43,13 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mPaper.count();
+			return mTest.getQuestionCount();
 		}
 
 		@Override
 		public Object getItem(int arg0) {
 			// TODO Auto-generated method stub
-			return mPaper.get(arg0);
+			return mTest.getQuestion(arg0);
 		}
 
 		@Override
@@ -76,17 +72,16 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 			vg.setLayoutParams(new GridView.LayoutParams(80, 80));
 			
 			view = (AnswerView)vg.findViewById(R.id.answerview);
-			TestQuestion tq = mPaper.get(postion);
+			Question tq = mTest.getQuestion(postion);
 			view.setText(Integer.toString(postion+1));
-			view.setHasAnswer(mAnswer.getAnswer(tq.getId()) != null);
-			android.util.Log.i("==DJJ", "Grid getView id=" + tq.getId() + ",index="+postion +", mark=" + mAnswer.isQuestionMark(tq.getId()));
-			view.setMark(mAnswer.isQuestionMark(tq.getId()));
+			view.setHasAnswer(mTest.getAnswer(tq.getId()) != null);
+			
+			view.setMark(mTest.isQuestionMark(tq.getId()));
 			view.setTag(postion);
 			view.setOnClickListener(mQuestionOnclicked);
 			
-			android.util.Log.i("==DJJ", "User answer="+mAnswer.getAnswer(tq.getId()) + ", ModelAnswer="+tq.getModelAnswer());
-			if(mPaper.getAutoCheck() && tq.isObjectiveQuestion() ) {
-				String answer = mAnswer.getAnswer(tq.getId());
+			if(mTest.getAutoCheck() && tq.isObjectiveQuestion() ) {
+				String answer = mTest.getAnswer(tq.getId());
 				if(answer != null) {
 					view.setAnswer(answer.equalsIgnoreCase(tq.getModelAnswer()) ? AnswerView.ANSWER_RIGHT: AnswerView.ANSWER_WRONG);
 				}
@@ -131,10 +126,9 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 		
 	}
 	
-	public void setPaper(Paper paper) {
-		mPaper = paper;
-		mAnswer = mPaper.getAnswers();
-		mAnswer.setListener(this);
+	public void setTest(Test test) {
+		mTest = test;
+		mTest.setListener(this);
 		if(mAdapter == null) {
 			mAdapter = new Adapter();
 			mGridView.setAdapter(mAdapter);
@@ -145,10 +139,6 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 		mListener = listener;
 	}
 	
-	public PaperAnswer getAnswer() {
-		return mAnswer;
-	}
-	
 	
 	private void onSubmit() {
 		if(mListener != null) {
@@ -157,12 +147,12 @@ public class AnswerCard extends FrameLayout implements PaperAnswer.OnAnswerChang
 	}
 
 	@Override
-	public void onAnswerChanged(int q_id, String answer) {
+	public void onAnswerChanged(String q_id, String answer) {
 		mAdapter.notifyDataSetChanged();
 	}
 
 	@Override
-	public void onMarkChanged(int q_id, boolean bmarked) {
+	public void onMarkChanged(String q_id, boolean bmarked) {
 		mAdapter.notifyDataSetChanged();
 	}
 }
