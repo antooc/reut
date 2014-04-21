@@ -3,6 +3,8 @@ package com.peice.common;
 import com.peice.R;
 import com.peice.R.id;
 import com.peice.R.layout;
+import com.peice.net.FakeServer;
+import com.peice.net.NetClient;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -17,6 +19,16 @@ import android.widget.TextView;
 public class BaseActivity extends Activity {
 
 	private TextView mTitle;
+	
+	@Override
+	public void onCreate(Bundle saved) {
+		super.onCreate(saved);
+		
+		if (NetClient.USE_FAKE) {
+			FakeServer.getInstance().setContext(this);
+		}
+		
+	}
 	
 	@Override
 	public void onStart() {

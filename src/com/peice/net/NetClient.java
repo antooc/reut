@@ -15,6 +15,8 @@ import android.util.Log;
 
 public class NetClient {
 	
+	public final static boolean USE_FAKE = true;
+	
 	String mHost;
 	String mCookie;
 	
@@ -26,6 +28,9 @@ public class NetClient {
 	
 	public NetClient(String host) {
 		mHost = host;
+		if (USE_FAKE) {
+			FakeServer.init(host);
+		}
 	}
 	
 	class HttpThread extends Thread {
@@ -107,8 +112,12 @@ public class NetClient {
 	}
 	
 	public void post(String url, String encodedParams, Reciever reciever) {
-		final HttpThread httpThread = new HttpThread(url, encodedParams, reciever);
-		httpThread.start();
+		if (USE_FAKE) {
+			postFake(url, encodedParams, reciever);
+		}
+		else {
+			postReal(url, encodedParams, reciever);
+		}
 	}
 	
 	public void post(String url, Map<String, String> params, Reciever reciever) {
@@ -125,6 +134,46 @@ public class NetClient {
 			e.printStackTrace();
 		}
 		post(url, builder.toString(), reciever);
+	}
+	
+	//////////////////////////////////////////////////////////////
+	//Real impl
+	private void postReal(String url, String encodedParams, Reciever reciever) {
+		final HttpThread httpThread = new HttpThread(url, encodedParams, reciever);
+		httpThread.start();
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////
+	//Fake impl
+	private void postFake(String url, String encodedParams, Reciever reciever) {
+		final FakeThread fakeThread = new FakeThread(url, encodedParams, reciever);
+		fakeThread.start();
+	}
+	
+	class FakeThread extends Thread {
+		Reciever mReciever;
+		String   mUrl;
+		String   mParams;
+		
+		FakeThread(String url, String params, Reciever reciever) {
+			mUrl = url;
+			mParams = params;
+			mReciever = reciever;
+		}
+		
+		public void run() {
+			
+			String buffer = FakeServer.getInstance().getBuffer(mUrl, mParams);
+			try {
+				sleep(1000);
+			}catch(Exception e) {
+			}
+			
+			if (mReciever != null) {
+				mReciever.onStringReceived(buffer);
+			}
+		}
 	}
 	
 	

@@ -10,6 +10,8 @@ import com.peice.model.DataManager;
 import com.peice.model.Question;
 import com.peice.model.QuestionGroup;
 import com.peice.model.Test;
+import com.peice.net.FakeServer;
+import com.peice.net.NetClient;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -217,6 +219,10 @@ public class PaperActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
+		
+		if (NetClient.USE_FAKE) {
+			FakeServer.getInstance().setContext(this);
+		}
 		
 		Intent intent = getIntent();
 		
