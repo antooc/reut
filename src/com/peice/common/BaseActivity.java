@@ -34,6 +34,7 @@ public class BaseActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);

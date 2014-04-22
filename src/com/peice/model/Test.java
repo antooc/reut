@@ -155,15 +155,16 @@ public class Test {
 		1. 如果有些字段不是必需的，请不要放在其中，如ordercode,difficulty,distinction这些字段
 		2. questype取值有那些？代表那些含义？
 	 */
-	public void loadQuestions(JSONArray questions) {
+	public void loadQuestions(JSONArray questions, Map<String, String> branches) {
 		if (mType != TYPE_NORMAL) {
 			Log.e("Test", "incorrect question type, need Normal!");
 			return;
 		}
+		
 		QuestionGroup group = new QuestionGroup(mName);
 		try {
 			for(int i = 0; i < questions.length(); i++) {
-				Question tq = Question.create(questions.getJSONObject(i), group);
+				Question tq = Question.create(questions.getJSONObject(i), group, branches);
 				if (tq != null) {
 					mQuestions.add(tq);
 				}

@@ -9,7 +9,7 @@ json/m_login_json.php
 	"notice":"本次测试的成绩关系到各位的学分获取",
 	"tests":[
 		{"testid":"T100001","testname":"培训评估表","timelength":"20","testtype":"S"},
-		{"testid":"T100162","testname":"民建经销商经营决策沙盘","timelength":"40","timetype":"E"}
+		{"testid":"T100162","testname":"民建经销商经营决策沙盘","timelength":"40","testtype":"E"}
 	]}
 ==END==
 
@@ -24,57 +24,78 @@ json/m_list_json.php
 ==END==
 
 json/m_test_json.php
-testid=
+testid=T100001
 ==START==
-<?xml version="1.0" encoding="UTF-8"?>
+{
+	"status":"OK",
+	"result":"可以答题！",
+	"testid":"T100154",
+	"testtype":"S",
+	"level":{"A":"非常同意","B":"同意","C":"一般","D":"不同意","E":"非常不满意"},
+	"queslist":
+	[
+		{
+			"quesid":"Q102158",
+			"questype":"S",
+			"quesbody":"授课老师的互动性"
+		},
+		{
+			"quesid":"Q102159",
+			"questype":"S",
+			"quesbody":"案例式的学习方式"
+		},
+		{
+			"quesid":"Q102160",
+			"questype":"Q",
+			"quesbody":"谈谈你对本次培训的意见或建议。"
+		}
+	]
+} 
+==END==
 
-<!-- 
-	这是培训评估表，index表示评分指标区域，statement表示大项，item表示小项，小项为5分制单选；
-	question表示开放式问答区域，每个就是一个问题；
-	item的id必须全系统唯一，id中的E01表示评估表编号，由管理员统一分配，后面的Q101是本表中唯一编号；
-	Q101表示第一大项第一小题，该编号必须顺序排列，且一经确定不得更改；
-	content表示显示的内容；
-	level表示五个级别的显示内容。
-
-	评分作答情况存入数据库 tbl_proj_answer表中，表中的 QUESID即本文档中的item id，所以必须唯一且顺序排列。
-
-	version、author无实际意义，仅用于维护方便
-
-	ChenGuang 2013-08-06
--->
-
-<evaluation version="1.0" author="ChenGuang">
-	<index level5="非常同意" level4="同意" level3="一般" level2="不同意" level1="非常不同意">
-		<statement content="课程目标">
-			<item id="E01Q101" content="一、这个课程目标与我工作的相关"/>
-			<item id="E01Q102" content="二、课程内容达到我的期望程度"/>
-		</statement>
-		<statement content="课程设计与安排">
-			<item id="E01Q201" content="一、课程内容组织符合逻辑，易于学习"/>
-			<item id="E01Q202" content="二、课程的程序安排妥当"/>
-			<item id="E01Q203" content="三、课程难易适中"/>
-			<item id="E01Q204" content="四、课程讲授的时间安排"/>
-			<item id="E01Q205" content="五、所学知识能在工作中应用"/>
-		</statement>
-		<statement content="培训讲师">
-			<item id="E01Q301" content="一、课前的准备"/>
-			<item id="E01Q302" content="二、专业水平"/>
-			<item id="E01Q303" content="三、讲课亲切度"/>
-			<item id="E01Q304" content="四、课程内容表达"/>
-			<item id="E01Q305" content="五、课程中使用技巧、案例分析的有效"/>
-			<item id="E01Q306" content="六、有机会让学员参加"/>
-		</statement>
-		<statement content="学员参与度">
-			<item id="E01Q401" content="一、本人很认真的参与了"/>
-			<item id="E01Q402" content="二、其他学员积极参与了"/>
-			<item id="E01Q403" content="三、您对这次培训的整体评价"/>
-		</statement>
-	</index>
-	<!-- 问答题 -->
-	<question>
-		<item id="E01QA01" content="1、 您觉得此次培训最有价值的三点是什么？"/>
-		<item id="E01QA02" content="2、 您建议我们以后的同类培训作哪些调整？"/>
-		<item id="E01QA03" content="3、 您期望再获得哪些方面的培训 ，请列三个"/>
-	</question>	
-</evaluation>
+json/m_login_json.php
+testid=T100162
+==START==
+{
+	"status":"OK",
+	"result":"可以答题！",
+	"testid":"T100154",
+	"testtype":"E",
+	"paperid":"T100154P001",
+	"queslist":
+	[
+		{
+			"quesid":"Q102158",
+			"questype":"T",
+			"score":"1",
+			"quesbody":"2014年，新员工在办理入职手续时，人力资源中心会为每一位新员工发放《新员工导师手册》。",
+			"quesmedia":"",
+			"choice_a":"对",
+			"choice_b":"错",
+			"choice_c":"",
+			"choice_d":"",
+			"choice_e":"",
+			"choice_f":"",
+			"choice_g":"",
+			"choice_h":"",
+			"answer":"A"
+		},
+		{
+			"quesid":"Q102159",
+			"questype":"S",
+			"score":"1",
+			"quesbody":"新员工需在入职（ ）天内，将《新员工导师责任书》签署完毕，并交到人力资源部培训组。",
+			"quesmedia":"",
+			"choice_a":"1",
+			"choice_b":"2",
+			"choice_c":"3",
+			"choice_d":"4",
+			"choice_e":"",
+			"choice_f":"",
+			"choice_g":"",
+			"choice_h":"",
+			"answer":"C"
+		}
+	]
+}
 ==END==

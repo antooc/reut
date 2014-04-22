@@ -3,6 +3,7 @@ package com.peice.model;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -78,6 +79,7 @@ public class DataManager {
 		params.put("candsex", bmale ? "M" : "F");
 		params.put("candemail", email);
 		params.put("candid", mCandidate.getId());
+		mCandidate.setName(name);
 		
 		final NetClient.Reciever reciever = new NetClient.Reciever() {
 
@@ -138,7 +140,7 @@ public class DataManager {
 
 			@Override
 			public void onStringReceived(String buffer) {
-				if (test.getType() == Test.TYPE_EVA) { //xml 格式的评估表
+				/*if (test.getType() == Test.TYPE_EVA) { //xml 格式的评估表
 					try {
 						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 						DocumentBuilder builder = factory.newDocumentBuilder();
@@ -152,25 +154,38 @@ public class DataManager {
 					}
                     
 				}
-				else if(test.getType() == Test.TYPE_NORMAL) { //json格式
+				else if(test.getType() == Test.TYPE_NORMAL) {*/ //json格式
 					
 					try {
+						Map<String,String> branches = null;
 						JSONObject json = new JSONObject(buffer);
 						String status = json.getString("status");
-						if (!status.equals("TEST_IMCOMPLET")) {
+						if (!status.equalsIgnoreCase("OK")) {
 							Log.e("DataManager", "Get the Test " + test.getId() + " failed!");
 							return ;
 						}
 						
+						//try get level
+						if (test.getType() == Test.TYPE_EVA) {
+							branches = new HashMap<String, String>();
+							JSONObject jlevel = json.getJSONObject("level");
+							Iterator<String> it = (Iterator<String>)jlevel.keys();
+							while (it.hasNext()) {
+								String key = it.next();
+								String value = jlevel.getString(key);
+								branches.put(key, value);
+							}
+						}
+						
 						JSONArray questions = json.getJSONArray("testquestions");
 					
-						test.loadQuestions(questions);
+						test.loadQuestions(questions, branches);
 					}catch(JSONException e) {
 						Log.e("DataManager", "Get Test failed:"+e);
 						e.printStackTrace();
 						return ;
 					}
-				}
+				//}
 				
 				Message msg = handle.obtainMessage();
 				msg.what = MSG_QUERY_TEST;

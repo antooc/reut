@@ -69,18 +69,18 @@ public class FakeServer {
 			
 			while (line != null) {
 				Map<String,String> ps = null;
-				if (mparams != null) {
-					ps = new HashMap<String, String>();
-				}
+				
 				//get the params;
 				while ((line = br.readLine()) != null) {
 					if (line.equals("==START==")) {
 						break;
 					}
-					if (ps != null) {
-						String[] arr = line.split("=");
-						ps.put(arr[0], arr[1]);
+					String[] arr = line.split("=");
+					if (ps == null) {
+						ps = new HashMap<String, String>();
 					}
+					
+					ps.put(arr[0], arr[1]);
 				}
 				
 				if (ps != null && ps.size() > 0) {
@@ -96,6 +96,21 @@ public class FakeServer {
 						}
 					}
 					if (matched) {
+						break;
+					}
+				}
+				else {
+					break;
+				}
+				
+				//find the end
+				while ((line = br.readLine()) != null) {
+					if (line.equals("==END==")) {
+						break;
+					}
+				}
+				while ((line = br.readLine()) != null) {
+					if(line.equals(suburl)) {
 						break;
 					}
 				}

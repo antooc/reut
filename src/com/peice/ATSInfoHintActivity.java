@@ -40,7 +40,7 @@ public class ATSInfoHintActivity extends BaseActivity {
 
         Candidate cand = DataManager.getInstance().getCandidate();
         if (cand != null) {
-        	setInfo(R.id.tv_infohint_itemcontent, cand.getName());
+        	setInfo(R.id.tv_infohint_namecontent, cand.getName());
         	setInfo(R.id.tv_infohint_itemcontent, cand.getProjectName());
         	setInfo(R.id.tv_infohint_hintcontent, cand.getNotice());
         	

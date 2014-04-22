@@ -105,11 +105,13 @@ public class Candidate {
 		//parse status
 		try {
 			String ret = json.getString("status");
-			if(ret == null) {
+			if(ret == null || !ret.equalsIgnoreCase("OK")) {
 				mLoginStatus = STATUS_FAIL;
-				mLoginResult = "Parse JSON Failed!";
+				mLoginResult = json.optString("result");
 				return;
 			}
+			mLoginStatus = STATUS_OK;
+			
 			mLoginResult = json.optString("result");
 			
 			mCandId    = json.getString("candid");

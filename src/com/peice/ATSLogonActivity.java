@@ -107,18 +107,23 @@ public class ATSLogonActivity extends BaseActivity {
     }
 
     private void showHintView(String result) {
-        final TextView tv_hint = new TextView(this);
+        /*final TextView tv_hint = new TextView(this);
 
         ll_Hint.removeAllViews();
         ll_Hint.addView(tv_hint);
         tv_hint.setText(result == null ? getString(R.string.logon_hint) : result);
-        tv_hint.setTextColor(Color.RED);
+        tv_hint.setTextColor(Color.RED);*/
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(result)
+        	.setTitle("登陆失败！")
+            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    logonButton.setText(R.string.logon_logon);
+                }
+            });
+        AlertDialog alert = builder.create();
+        alert.show(); 	
     }
-
-    // ��鿼��״̬
-    /*private boolean validTestStatus() {
-        return false;
-    }*/
 
     private void loginProcess() {
     	
@@ -155,69 +160,5 @@ public class ATSLogonActivity extends BaseActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    /*private JSONObject query(String userName, String password) throws Exception {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("candname", userName);
-        map.put("pass", password);
-
-        String url = ATSHttpUtil.BASE_URL + "tbl_proj_cand";
-        return new JSONObject(ATSHttpUtil.postRequest(url, map));
-    }
-
-    // ����û���������ѯ
-    private String queryC(String account, String password) throws Exception {
-        // ��ѯ����
-        String queryString = "account=" + account + "&password=" + password;
-        // url
-        String url = ATSHttpUtil.BASE_URL + "servlet/tbl_proj_cand?" + queryString;
-        // ��ѯ���ؽ��
-        return ATSHttpUtil.queryStringForPost(url);
-    }
-
-    // MD5���ܣ�32λ 
-    public static String MD5(String str) { 
-        MessageDigest md5 = null; 
-        try { 
-            md5 = MessageDigest.getInstance("MD5"); 
-        }
-        catch (Exception e) { 
-            e.printStackTrace(); 
-            return ""; 
-        } 
-         
-        char[] charArray = str.toCharArray(); 
-        byte[] byteArray = new byte[charArray.length]; 
-         
-        for (int i = 0; i < charArray.length; i++) { 
-            byteArray[i] = (byte) charArray[i]; 
-        } 
-
-        byte[] md5Bytes = md5.digest(byteArray); 
-        StringBuffer hexValue = new StringBuffer(); 
-
-        for (int i = 0; i < md5Bytes.length; i++) { 
-            int val = ((int) md5Bytes[i]) & 0xff; 
-            if (val < 16) { 
-                hexValue.append("0"); 
-            } 
-            hexValue.append(Integer.toHexString(val)); 
-        }
-
-        return hexValue.toString(); 
-    } 
-     
-    // ����ļ����㷨 
-    public static String encryptMD5(String str) { 
-        char[] a = str.toCharArray(); 
-
-        for (int i = 0; i < a.length; i++) { 
-            a[i] = (char) (a[i] ^ 'l'); 
-        } 
-
-        String s = new String(a); 
-
-        return s; 
-    }*/
 }
 

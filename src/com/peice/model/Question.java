@@ -70,7 +70,7 @@ public class Question {
 	 	"choice": {"A":"对","B":"错"}
 	  }
 	 */
-	public static Question create(JSONObject json, QuestionGroup defgroup) {
+	public static Question create(JSONObject json, QuestionGroup defgroup, Map<String, String> branches) {
 		try {
 			Question q = new Question();
 			q.mGroup = defgroup;
@@ -81,13 +81,18 @@ public class Question {
 			q.mTrunk = json.getString("quesbody");
 			
 			if (q.mType == TYPE_SIGNLE_SELECT || q.mType == TYPE_MULTI_SELECT) {
-				JSONObject choice = json.getJSONObject("choice");
-				q.mBranches = new HashMap<String, String>();
-				Iterator<String> it = (Iterator<String>)choice.keys();
-				while (it.hasNext()) {
-					String key = it.next();
-					String value = choice.getString(key);
-					q.mBranches.put(key, value);
+				if (branches == null) {
+					JSONObject choice = json.getJSONObject("choice");
+					q.mBranches = new HashMap<String, String>();
+					Iterator<String> it = (Iterator<String>)choice.keys();
+					while (it.hasNext()) {
+						String key = it.next();
+						String value = choice.getString(key);
+						q.mBranches.put(key, value);
+					}
+				}
+				else {
+					q.mBranches = branches;
 				}
 			}
 			

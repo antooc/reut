@@ -113,21 +113,27 @@ public class NetClient {
 	
 	public void post(String url, String encodedParams, Reciever reciever) {
 		if (USE_FAKE) {
-			postFake(url, encodedParams, reciever);
+			postFake(mHost + '/' + url, encodedParams, reciever);
 		}
 		else {
-			postReal(url, encodedParams, reciever);
+			postReal(mHost + '/' + url, encodedParams, reciever);
 		}
 	}
 	
 	public void post(String url, Map<String, String> params, Reciever reciever) {
 		StringBuilder builder = new StringBuilder();
 		try {
+			boolean bfirst = true;
 			for (String key : params.keySet()) {
+				if (!bfirst) {
+					builder.append("&");
+				}
+				else {
+					bfirst = false;
+				}
 				builder.append(URLEncoder.encode(key, CHARSET));
 				builder.append("=");
 				builder.append(URLEncoder.encode(params.get(key), CHARSET));
-				builder.append(";");
 			}
 		}catch(Exception e) {
 			//TODO
