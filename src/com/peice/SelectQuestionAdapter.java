@@ -1,7 +1,10 @@
 package com.peice;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.peice.common.SelectView;
@@ -30,14 +33,21 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 		
 		mBtnBranches = new HashMap<String, SelectView>();
 		
-		Iterator<String> keyit = branches.keySet().iterator();
-		while (keyit.hasNext()) {
-
+		List<String>keylist = new ArrayList<String>();
+		
+		Object [] keys = branches.keySet().toArray();
+		for (int i = 0; i < keys.length; i++) {
+			keylist.add((String)keys[i]);
+		}
+		
+		Collections.sort(keylist);
+		
+		for(int i = 0; i < keylist.size(); i ++ ) {
 			SelectView view = (SelectView)inflater.inflate(getResId(), null);
 			if(view == null)
 				continue;
 			
-			String key = keyit.next();
+			String key = keylist.get(i);
 			String branch = branches.get(key);
 			
 			mBtnBranches.put(key, view);

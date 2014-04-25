@@ -15,7 +15,7 @@ import android.util.Log;
 
 public class NetClient {
 	
-	public final static boolean USE_FAKE = true;
+	public final static boolean USE_FAKE = false;
 	
 	String mHost;
 	String mCookie;
@@ -49,6 +49,8 @@ public class NetClient {
 	        BufferedReader in = null;
 	        String result = "";
 	        try {
+	        	Log.d("PEICE","URL Request:"+mUrl);
+	        	Log.d("PEICE","Post:"+mParams);
 	            URL realUrl = new URL(mUrl);
 	            // 打开和URL之间的连接
 	            URLConnection conn = realUrl.openConnection();
@@ -87,6 +89,7 @@ public class NetClient {
 	                result += line;
 	            }
 	            
+	            Log.d("PEICE:","Recieved:"+result);
 	            if (mReciever != null) {
 	            	mReciever.onStringReceived(result);
 	            }

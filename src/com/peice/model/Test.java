@@ -102,6 +102,9 @@ public class Test {
 			mAnswers = new HashMap<String, String>();
 		}
 		mAnswers.put(qid, answer);
+		if (mOnAnswerChanged != null) {
+			mOnAnswerChanged.onAnswerChanged(qid, answer);
+		}
 	}
 	public String getAnswer(String qid) {
 		if (mAnswers == null) {
@@ -155,12 +158,7 @@ public class Test {
 		1. 如果有些字段不是必需的，请不要放在其中，如ordercode,difficulty,distinction这些字段
 		2. questype取值有那些？代表那些含义？
 	 */
-	public void loadQuestions(JSONArray questions, Map<String, String> branches) {
-		if (mType != TYPE_NORMAL) {
-			Log.e("Test", "incorrect question type, need Normal!");
-			return;
-		}
-		
+	public void loadQuestions(JSONArray questions, Map<String, String> branches) {		
 		QuestionGroup group = new QuestionGroup(mName);
 		try {
 			for(int i = 0; i < questions.length(); i++) {

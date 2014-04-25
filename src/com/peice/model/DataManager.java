@@ -42,17 +42,9 @@ public class DataManager {
 	}
 	
 	public void login(String name, String passwrod, final Handler handle) {
-		if(mCandidate != null) {
-			Message msg = handle.obtainMessage();
-			msg.what = MSG_LOGIN;
-			msg.obj = mCandidate;
-			handle.sendMessage(msg);
-			return ;
-		}
-		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("loginname", name);
-		params.put("loginpw", name);
+		params.put("loginpw", passwrod);
 		
 		final NetClient.Reciever reciever = new NetClient.Reciever() {
 
@@ -177,7 +169,7 @@ public class DataManager {
 							}
 						}
 						
-						JSONArray questions = json.getJSONArray("testquestions");
+						JSONArray questions = json.getJSONArray("queslist");
 					
 						test.loadQuestions(questions, branches);
 					}catch(JSONException e) {

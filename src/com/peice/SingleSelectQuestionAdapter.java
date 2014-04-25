@@ -10,13 +10,25 @@ import com.peice.model.Question;
 
 public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 	
+	int mInvokCount = 0;
+	
 	public SingleSelectQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
 		super(tq, onAnswerChanged);
 	}
 	
 	protected void onBrancheSelectChanged(SelectView btn, boolean checked){
-		if(!checked)
+		if (mInvokCount > 0) {
 			return;
+		}
+		
+		mInvokCount ++;
+		
+		if(!checked) {
+			btn.setChecked(true);
+			onAnswerFinished();
+			mInvokCount --;
+			return;
+		}
 		
 		Iterator<String> keyit = mBtnBranches.keySet().iterator();
 		while (keyit.hasNext()) {
@@ -33,6 +45,7 @@ public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 		}
 		
 		onAnswerFinished();
+		mInvokCount --;
 	}
 	
 	@Override

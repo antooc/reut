@@ -53,7 +53,7 @@ testid=T100001
 } 
 ==END==
 
-json/m_login_json.php
+json/m_test_json.php
 testid=T100162
 ==START==
 {

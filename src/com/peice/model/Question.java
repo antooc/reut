@@ -54,7 +54,19 @@ public class Question {
 		return mModelAnswer;
 	}
 	
-	
+	static final String choice_list_key[] = {
+		"choice_a",
+		"choice_b",
+		"choice_c",
+		"choice_d",
+		"choice_e",
+		"choice_f",
+		"choice_g",
+		"choice_h"
+	};
+	static final String choice_list_id[] = {
+		"A","B","C","D","E","F"
+	};
 	
 	/*
 	 {"paperid":"T100154P001",
@@ -77,19 +89,26 @@ public class Question {
 			
 			q.mId = json.getString("quesid");
 			q.mType = parseType(json.optString("questype"));
-			q.mScore = json.getInt("score");
+			q.mScore = json.optInt("score");
 			q.mTrunk = json.getString("quesbody");
 			
 			if (q.mType == TYPE_SIGNLE_SELECT || q.mType == TYPE_MULTI_SELECT) {
 				if (branches == null) {
-					JSONObject choice = json.getJSONObject("choice");
 					q.mBranches = new HashMap<String, String>();
-					Iterator<String> it = (Iterator<String>)choice.keys();
-					while (it.hasNext()) {
-						String key = it.next();
-						String value = choice.getString(key);
-						q.mBranches.put(key, value);
+					for (int i = 0; i < choice_list_key.length; i ++) {
+						try {
+							String value = json.getString(choice_list_key[i]);
+							if (value == null || value.length() == 0) {
+								break;
+							}
+							
+							q.mBranches.put(choice_list_id[i], value);
+							
+						}catch(Exception e) {
+							break;
+						}
 					}
+					
 				}
 				else {
 					q.mBranches = branches;
