@@ -120,7 +120,7 @@ public class Question {
 			Log.e("Question", "Cannot parse json:" + e);
 			return null;
 		}
-	}
+	}  
 	
 	private static int parseType(String t) {
 		if (t == null) {
@@ -132,10 +132,10 @@ public class Question {
 		else if(t.equals("M")) {
 			return TYPE_MULTI_SELECT;
 		}
-		else if(t.equals("A")) {
+		else if(t.equals("Q")) {
 			return TYPE_SHORT_ANSWER;
 		}
-		else if(t.equals("V")) {
+		else if(t.equals("F")) {
 			return TYPE_VACANCY;
 		}
 		else {

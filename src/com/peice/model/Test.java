@@ -60,6 +60,10 @@ public class Test {
 		return mType;
 	}
 	
+	public String getTypeString() {
+		return String.valueOf(mType);
+	}
+	
 	public String getDescription() {
 		return Integer.toString(mLength) + "分钟";
 	}

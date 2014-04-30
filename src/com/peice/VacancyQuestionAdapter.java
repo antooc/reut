@@ -62,8 +62,9 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 		
 		int branchCount = mQuestion.getBranchCount();
 		
-		if(branchCount <= 0)
-			return ;
+		if(branchCount <= 0) {
+			branchCount = 1;
+		}
 		
 		mVacancyFields = new VacancyField[branchCount];
 		

@@ -103,6 +103,29 @@ public class DataManager {
 		mNetClient.post("json/m_inputinfo_json.php", params, reciever);
 	}
 	
+	
+	static String level_keys[] = {
+		"level1",
+		"level2",
+		"level3",
+		"level4",
+		"level5",
+		"level6",
+		"level7",
+		"level8",
+		"level9",
+		"level10"
+	};
+	static String level_values[] = { "A","B","C","D","E","F","G","H","I","J"};
+	static String getLevelValue(String level) {
+		for (int i = 0; i < level_keys.length; i ++) {
+			if (level.equals(level_keys[i])) {
+				return level_values[i];
+			}
+		}
+		return level;
+	}
+	
 	public void queryTest(String testId, final Handler handle) {
 		if(mCandidate == null) {
 			return ;
@@ -127,6 +150,7 @@ public class DataManager {
 		params.put("projid", mCandidate.getProjectId());
 		params.put("candid", mCandidate.getId());
 		params.put("testid", test.getId());
+		params.put("testtype",test.getTypeString());
 		
 		final NetClient.Reciever reciever = new NetClient.Reciever() {
 
@@ -165,7 +189,7 @@ public class DataManager {
 							while (it.hasNext()) {
 								String key = it.next();
 								String value = jlevel.getString(key);
-								branches.put(key, value);
+								branches.put(getLevelValue(key), value);
 							}
 						}
 						
