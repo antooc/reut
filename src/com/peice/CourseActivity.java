@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ public class CourseActivity extends BaseActivity {
 	private ListView mCourseList;
 	private Adapter mAdapter;
 	private Candidate mCandidate;
+	private Handler mHandler;
 	
 	static private class ViewHolder {
 		TextView name;
@@ -102,6 +107,66 @@ public class CourseActivity extends BaseActivity {
         		onCourseClicked(arg2);
         	}
         });
+        
+		Button submit = (Button)findViewById(R.id.submit);
+		
+		submit.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onSubmit();
+			}
+			
+		});
+		
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == DataManager.MSG_SUBMIT_ALL) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+					builder.setTitle("提交结果");
+					builder.setMessage((String)msg.obj);
+					AlertDialog dialog = builder.create();
+					
+					dialog.setOnDismissListener(new OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface arg0) {
+							// TODO Auto-generated method stub
+							finish();
+						}
+					});
+					
+					dialog.show();
+				}
+			}
+		};
+    }
+    
+    private void onSubmit() {
+    	List<Test> tests = getTests();
+    	boolean finished = true;
+    	if (tests == null) {
+    		finished = false;
+    	}
+    	else {
+    		for (int i = 0; i < tests.size(); i ++) {
+    			if (!tests.get(i).isSubmitted()) {
+    				finished = false;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	if (!finished) {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder.setTitle("提交");
+    		builder.setMessage("您尚未完成所有试卷，不能提交!");
+    		builder.create().show();
+    		return;
+    	}
+    	
+    	DataManager.getInstance().submitAll(mHandler);
     }
     
     @Override

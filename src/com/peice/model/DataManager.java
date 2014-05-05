@@ -26,6 +26,10 @@ public class DataManager {
 	public final static int MSG_LOGIN = 1; //
 	public final static int MSG_UPDATE = 2;
 	public final static int MSG_QUERY_TEST = 3;
+	public final static int MSG_SUBMIT_TEST = 4;
+	public final static int MSG_SUBMIT_ALL = 4;
+	public final static int OK = 1;
+	public final static int FAIL = 0;
 	
 	NetClient  mNetClient;
 	Candidate mCandidate;
@@ -212,6 +216,105 @@ public class DataManager {
 		};
 		
 		mNetClient.post("json/m_test_json.php", params, reciever);
+	}
+	
+	public void submitTest(Test test, String begintime, final Handler handle) {
+		if(mCandidate == null) {
+			return ;
+		}
+		
+		Map<String, String> answers = test.getAnswers();
+		if (answers == null) {
+			return ;
+		}
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("candid", mCandidate.getId());
+		params.put("projid", mCandidate.getProjectId());
+		params.put("testid", test.getId());
+		params.put("paperid", test.getPaperId());
+		params.put("testtype", test.getTypeString());
+		//TODO begin time yymmddhhmm
+		params.put("begintime", begintime);
+		
+		Iterator<String> iterator = answers.keySet().iterator();
+		
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			String value = answers.get(key);
+			params.put(key, value);
+		}
+		
+		//Submit
+		final NetClient.Reciever reciever = new NetClient.Reciever() {
+
+			@Override
+			public void onStringReceived(String buffer) {
+				//1. 提交成功 {"status":"OK","result":"进交完成！"}
+				//2. 提交失败 {"status":"FAIL","result":"提交失败，不能完成提交！"}
+				try {
+					JSONObject json = new JSONObject(buffer);
+					String status = json.getString("status");
+					int istatus = FAIL;
+					if (status.equalsIgnoreCase("OK")) {
+						istatus = OK;
+					}
+					String errmsg = json.optString("result");
+					
+					Message msg = handle.obtainMessage();
+					msg.what = MSG_SUBMIT_TEST;
+					msg.what = istatus;
+					msg.obj = errmsg;
+					handle.sendMessage(msg);
+				}catch (Exception e) {
+					Log.e("DataManager", "Submit failed:"+e);
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		mNetClient.post("json/m_test_submit_json.php", params, reciever);
+	}
+	
+	public void submitAll(final Handler handle) {
+		if(mCandidate == null) {
+			return ;
+		}
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("candid", mCandidate.getId());
+		params.put("projid", mCandidate.getProjectId());
+		
+		//Submit
+				final NetClient.Reciever reciever = new NetClient.Reciever() {
+
+					@Override
+					public void onStringReceived(String buffer) {
+						//1. 提交成功 {"status":"OK","result":"进交完成！"}
+						//2. 提交失败 {"status":"FAIL","result":"提交失败，不能完成提交！"}
+						try {
+							JSONObject json = new JSONObject(buffer);
+							String status = json.getString("status");
+							int istatus = FAIL;
+							if (status.equalsIgnoreCase("OK")) {
+								istatus = OK;
+							}
+							String errmsg = json.optString("result");
+							
+							Message msg = handle.obtainMessage();
+							msg.what = MSG_SUBMIT_ALL;
+							msg.what = istatus;
+							msg.obj = errmsg;
+							handle.sendMessage(msg);
+						}catch (Exception e) {
+							Log.e("DataManager", "Submit failed:"+e);
+							e.printStackTrace();
+						}
+					}
+				};
+				
+				mNetClient.post("json/m_test_submit_json.php", params, reciever);
+		
 	}
 	
 	public Candidate getCandidate() {

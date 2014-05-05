@@ -108,9 +108,11 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 	void updateAnswer() {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < mVacancyFields.length; i ++) {
+			if (i > 0) {
+				builder.append("\n"); //TODO 还未确定具体格式，先这样吧
+			}
 			String str = mVacancyFields[i].text.getText().toString();
 			builder.append(str);
-			builder.append("\n");
 		}
 		setAnswer(builder.toString());
 		onAnswerChanged();

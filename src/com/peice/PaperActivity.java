@@ -1,7 +1,10 @@
 package com.peice;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +18,10 @@ import com.peice.net.NetClient;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +65,7 @@ public class PaperActivity extends Activity implements
 	ViewPager    mContentView;
 	CheckBox     mMark;
 	Handler      mHandler;
+	Date         mBeginTime;
 	
 	class GotoQuestionRunable implements Runnable{
 		public int nextId;
@@ -243,31 +251,58 @@ public class PaperActivity extends Activity implements
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what != DataManager.MSG_QUERY_TEST) {
-					return;
+				if (msg.what == DataManager.MSG_QUERY_TEST) {
+					onQueryTest(msg);
+				}
+				if (msg.what == DataManager.MSG_SUBMIT_TEST) {
+					onSubmitTest(msg);
 				}
 				
-				mTest = (Test)msg.obj;
-				if (mTest == null) {
-					Log.e("PapaerAcitivty", "Invalidate Test");
-					finish();
-					return ;
-				}
-		
-				mPagerAdapter = new MyPagerAdapter();
-				mContentView.setAdapter(mPagerAdapter);
-				mContentView.setOnPageChangeListener(PaperActivity.this);
-		
-				mLeftSeconds = 0;
-				
-				onPageSelected(0);
-				setTime(mTest.getTimeLength() * 60);
-				startTimer();
 			}
 		};
 		
 		DataManager.getInstance().queryTest(testId, mHandler);
 		
+	}
+	
+	private void onSubmitTest(Message msg) {
+		mTest.setSubmitted(msg.arg1 == DataManager.OK);
+		//if (msg.arg1 == OK) {
+		//	
+		//}
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("提交结果");
+		builder.setMessage((String)msg.obj);
+		AlertDialog dialog = builder.create();
+		
+		dialog.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		
+		dialog.show();
+	}
+	
+	private void onQueryTest(Message msg) {
+		mTest = (Test)msg.obj;
+		if (mTest == null) {
+			Log.e("PapaerAcitivty", "Invalidate Test");
+			finish();
+			return ;
+		}
+
+		mPagerAdapter = new MyPagerAdapter();
+		mContentView.setAdapter(mPagerAdapter);
+		mContentView.setOnPageChangeListener(PaperActivity.this);
+
+		mLeftSeconds = 0;
+		
+		onPageSelected(0);
+		setTime(mTest.getTimeLength() * 60);
+		startTimer();
 	}
 	
 	@Override
@@ -348,6 +383,7 @@ public class PaperActivity extends Activity implements
 	public void startTimer() {
 		mTimerState = TIMER_IDLE;
 		mLeftSeconds = mTotalSeconds;
+		mBeginTime = new Date();
 		resumeTimer();
 	}
 	
@@ -400,6 +436,18 @@ public class PaperActivity extends Activity implements
 	@Override
 	public void onAnswer(Question tq, int idx) {
 		//mAnswerProgress.setProgress(mPaper.getAnswerCount());
+		Map<String, String> answers = mTest.getAnswers();
+		if (answers == null || answers.size() < mTest.getQuestionCount()) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("错误");
+			builder.setMessage("你尚未完成答题，不能提交！");
+			builder.create().show();
+			return ;
+		}
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+		
+		DataManager.getInstance().submitTest(mTest, df.format(mBeginTime), mHandler);
 	}
 
 	@Override

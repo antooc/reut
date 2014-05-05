@@ -22,11 +22,13 @@ public class Test {
 	
 	String mId;
 	String mName;
+	String mPaperId;
 	int   mLength;
 	char  mType;
 	boolean mIsComplete;
 	boolean mQuestionLoaded;
 	boolean mAutoCheck;
+	boolean mSubmitted;
 	
 	public static interface OnAnswerChanged {
 		public void onAnswerChanged(String q_id, String answer);
@@ -66,6 +68,10 @@ public class Test {
 	
 	public String getDescription() {
 		return Integer.toString(mLength) + "分钟";
+	}
+	
+	public String getPaperId() {
+		return mPaperId;
 	}
 	
 	public boolean isComplete() {
@@ -118,6 +124,17 @@ public class Test {
 		return mAnswers.get(qid);
 	}
 	
+	public Map<String, String> getAnswers() {
+		return mAnswers;
+	}
+	
+	public void setSubmitted(boolean b) {
+		mSubmitted = b;
+	}
+	public boolean isSubmitted() {
+		return mSubmitted;
+	}
+	
 	/*
 	 * {"testid":"T100001","testname":"培训评估表","timelength":"20","testtype":"S"},
 	 */
@@ -128,6 +145,7 @@ public class Test {
 			test.mName = json.getString("testname");
 			test.mLength = json.getInt("timelength");
 			String type = json.getString("testtype");
+			test.mPaperId = json.optString("paperid");
 			test.mType = type.toCharArray()[0];
 			
 			return test;
