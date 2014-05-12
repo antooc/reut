@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.peice.model.Question;
+import com.peice.model.Test;
 
 public abstract class QuestionAdapter {
 	
@@ -20,10 +21,12 @@ public abstract class QuestionAdapter {
 
 	private   OnAnswerChanged mOnAnswerChanged;
 	protected Question mQuestion;
+	protected Test mTest;
 	
 	private String mAnswer;
 	
-	public QuestionAdapter(Question question, OnAnswerChanged onAnswerChanged) {
+	public QuestionAdapter(Test test, Question question, OnAnswerChanged onAnswerChanged) {
+		mTest = test;
 		mQuestion = question;
 		mOnAnswerChanged = onAnswerChanged;
 	}
@@ -57,17 +60,17 @@ public abstract class QuestionAdapter {
 		return mAnswer;
 	}
 	
-	public static QuestionAdapter getAdapter(Question q, OnAnswerChanged onac) {
+	public static QuestionAdapter getAdapter(Test test, Question q, OnAnswerChanged onac) {
 		
 		switch(q.getType()) {
 		case Question.TYPE_SIGNLE_SELECT:
-			return new SingleSelectQuestionAdapter(q,onac);
+			return new SingleSelectQuestionAdapter(test, q,onac);
 		case Question.TYPE_MULTI_SELECT:
-			return new SelectQuestionAdapter(q,onac);
+			return new SelectQuestionAdapter(test, q,onac);
 		case Question.TYPE_VACANCY:
-			return new VacancyQuestionAdapter(q, onac);
+			return new VacancyQuestionAdapter(test, q, onac);
 		case Question.TYPE_SHORT_ANSWER:
-			return new ShortAnswerQuestionAdapter(q,onac);
+			return new ShortAnswerQuestionAdapter(test, q,onac);
 		}
 		return null;
 	}

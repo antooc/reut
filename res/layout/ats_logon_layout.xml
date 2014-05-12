@@ -70,7 +70,7 @@
 	                android:layout_toRightOf="@+id/tv_logon_name"
 	                android:textSize="20dp"
 	                android:ems="10"
-	                android:text="1000044319"/>
+	                android:text="1000044465"/>
 	
 	        </TableRow>
 	
@@ -98,7 +98,7 @@
 	                android:background="#ffffff"
 	                android:textSize="20dp"
 	                android:ems="10"
-	                android:text="NCSPCV"
+	                android:text="RRWVAD"
 	                android:inputType="textPassword" />
 	
 	        </TableRow>

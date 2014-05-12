@@ -28,6 +28,7 @@ public class DataManager {
 	public final static int MSG_QUERY_TEST = 3;
 	public final static int MSG_SUBMIT_TEST = 4;
 	public final static int MSG_SUBMIT_ALL = 4;
+	public final static int MSG_TEST_LIST_UPDATED = 5;
 	public final static int OK = 1;
 	public final static int FAIL = 0;
 	
@@ -107,6 +108,45 @@ public class DataManager {
 		mNetClient.post("json/m_inputinfo_json.php", params, reciever);
 	}
 	
+	public void getTestListStates(final Handler handle) {
+		if (mCandidate == null || mCandidate.getLoginStatus() != Candidate.STATUS_OK) {
+			return ;
+		}
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("candid", mCandidate.getId());
+		params.put("projid", mCandidate.getProjectId());
+		
+		final NetClient.Reciever reciever = new NetClient.Reciever() {
+			
+			@Override
+			public void onStringReceived(String buffer) {
+				String result = "OK";
+				boolean ok = true;
+				try {
+					JSONArray json = new JSONArray(buffer);
+					for (int i = 0; i < json.length(); i ++) {
+						JSONObject jtest = json.getJSONObject(i);
+						String id = jtest.getString("testid");
+						Test test = mCandidate.getTest(id);
+						if (test != null) {
+							test.update(jtest);
+						}
+					}	
+				} catch (JSONException e) {
+					result = "Faield:" + e;
+					ok = false;
+				}
+				
+				Message msg = handle.obtainMessage();
+				msg.what = MSG_TEST_LIST_UPDATED;
+				msg.arg1 = ok ? OK : FAIL;
+				msg.obj = result;
+			}
+		};
+		
+		mNetClient.post("json/m_list_json.php", params, reciever);
+	}
 	
 	static String level_keys[] = {
 		"level1",
@@ -118,9 +158,8 @@ public class DataManager {
 		"level7",
 		"level8",
 		"level9",
-		"level10"
 	};
-	static String level_values[] = { "A","B","C","D","E","F","G","H","I","J"};
+	static String level_values[] = { "1","2","3","4","5","6","7","8","9"};
 	static String getLevelValue(String level) {
 		for (int i = 0; i < level_keys.length; i ++) {
 			if (level.equals(level_keys[i])) {
@@ -145,6 +184,7 @@ public class DataManager {
 			//send
 			Message msg = handle.obtainMessage();
 			msg.what = MSG_QUERY_TEST;
+			msg.arg1 = OK;
 			msg.obj = test;
 			handle.sendMessage(msg);
 			return ;
@@ -182,6 +222,16 @@ public class DataManager {
 						String status = json.getString("status");
 						if (!status.equalsIgnoreCase("OK")) {
 							Log.e("DataManager", "Get the Test " + test.getId() + " failed!");
+							String result = json.optString("result");
+							if (result == null) {
+								result = "Unkown Error!";
+							}
+							Message msg = handle.obtainMessage();
+							msg.what = MSG_QUERY_TEST;
+							msg.arg1 = FAIL;
+							msg.obj = result;
+							handle.sendMessage(msg);
+							
 							return ;
 						}
 						
@@ -198,6 +248,8 @@ public class DataManager {
 						}
 						
 						JSONArray questions = json.getJSONArray("queslist");
+						//reget the paper id
+						test.refreash(json);
 					
 						test.loadQuestions(questions, branches);
 					}catch(JSONException e) {
@@ -209,6 +261,7 @@ public class DataManager {
 				
 				Message msg = handle.obtainMessage();
 				msg.what = MSG_QUERY_TEST;
+				msg.arg1 = OK;
 				msg.obj = test;
 				handle.sendMessage(msg);
 				return ;
@@ -263,7 +316,7 @@ public class DataManager {
 					
 					Message msg = handle.obtainMessage();
 					msg.what = MSG_SUBMIT_TEST;
-					msg.what = istatus;
+					msg.arg1 = istatus;
 					msg.obj = errmsg;
 					handle.sendMessage(msg);
 				}catch (Exception e) {
@@ -303,7 +356,7 @@ public class DataManager {
 							
 							Message msg = handle.obtainMessage();
 							msg.what = MSG_SUBMIT_ALL;
-							msg.what = istatus;
+							msg.arg1 = istatus;
 							msg.obj = errmsg;
 							handle.sendMessage(msg);
 						}catch (Exception e) {

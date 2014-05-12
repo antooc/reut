@@ -7,13 +7,14 @@ import android.widget.CompoundButton;
 import com.peice.QuestionAdapter.OnAnswerChanged;
 import com.peice.common.SelectView;
 import com.peice.model.Question;
+import com.peice.model.Test;
 
 public class SingleSelectQuestionAdapter extends SelectQuestionAdapter {
 	
 	int mInvokCount = 0;
 	
-	public SingleSelectQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
-		super(tq, onAnswerChanged);
+	public SingleSelectQuestionAdapter(Test test, Question tq, OnAnswerChanged onAnswerChanged) {
+		super(test, tq, onAnswerChanged);
 	}
 	
 	protected void onBrancheSelectChanged(SelectView btn, boolean checked){

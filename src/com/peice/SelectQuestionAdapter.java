@@ -2,6 +2,7 @@ package com.peice;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import com.peice.common.SelectView;
 import com.peice.model.Question;
+import com.peice.model.Test;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,8 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 
 	protected Map<String, SelectView> mBtnBranches;
 	
-	public SelectQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
-		super(tq, onAnswerChanged);
+	public SelectQuestionAdapter(Test test, Question tq, OnAnswerChanged onAnswerChanged) {
+		super(test, tq, onAnswerChanged);
 	}
 
 	@Override
@@ -40,7 +42,19 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 			keylist.add((String)keys[i]);
 		}
 		
-		Collections.sort(keylist);
+		if (mTest.getType() == Test.TYPE_EVA) {
+			Collections.sort(keylist, new Comparator<String>(){
+
+				@Override
+				public int compare(String arg0, String arg1) {
+					return -arg0.compareTo(arg1);
+				}
+				
+			});
+		}
+		else {
+			Collections.sort(keylist);
+		}
 		
 		for(int i = 0; i < keylist.size(); i ++ ) {
 			SelectView view = (SelectView)inflater.inflate(getResId(), null);
@@ -97,13 +111,22 @@ public class SelectQuestionAdapter extends QuestionAdapter{
 	protected void onBrancheSelectChanged(SelectView btn, boolean checked) {
 		StringBuilder answer = new StringBuilder();
 		Iterator<String> keyit = mBtnBranches.keySet().iterator();
+		List<String> answerList = new ArrayList<String>();
 		while (keyit.hasNext()) {
 			String key = keyit.next();
 			SelectView view = mBtnBranches.get(key);
 			if (view.isChecked()) {
-				answer.append(key);
+				answerList.add(key);
 			}
 		}
+		
+		if (answerList.size() > 0) {
+			Collections.sort(answerList);
+			for (int i = 0; i < answerList.size(); i++) {
+				answer.append(answerList.get(i));
+			}
+		}
+		
 		setAnswer(answer.toString());
 		onAnswerChanged();
 	}

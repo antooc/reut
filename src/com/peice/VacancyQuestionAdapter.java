@@ -1,6 +1,7 @@
 package com.peice;
 
 import com.peice.model.Question;
+import com.peice.model.Test;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,8 +51,8 @@ public class VacancyQuestionAdapter extends QuestionAdapter {
 	}
 	
 	
-	public VacancyQuestionAdapter(Question question, OnAnswerChanged onAnswerChanged) {
-		super(question, onAnswerChanged);
+	public VacancyQuestionAdapter(Test test, Question question, OnAnswerChanged onAnswerChanged) {
+		super(test, question, onAnswerChanged);
 	}
 
 	@Override

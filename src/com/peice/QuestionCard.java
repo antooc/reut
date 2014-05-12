@@ -102,7 +102,7 @@ public class QuestionCard extends FrameLayout implements QuestionAdapter.OnAnswe
 		//mTitle.setText(mQuestion.getGroup());
 		mQuestionTrunk.setText(mQuestion.getTrunk());
 		
-		mQuestionAdapter = QuestionAdapter.getAdapter(mQuestion, this);
+		mQuestionAdapter = QuestionAdapter.getAdapter(mTest, mQuestion, this);
 		mBranchesContainer.removeAllViews();
 		Log.i("==DJJ", "setupUI question="+mQuestion + ",mQuestionAdapter="+mQuestionAdapter);
 		if(mQuestionAdapter != null) {

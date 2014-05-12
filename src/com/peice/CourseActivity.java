@@ -83,7 +83,7 @@ public class CourseActivity extends BaseActivity {
 			
 			holder.name.setText(test.getName());
 			holder.description.setText(test.getDescription());
-			holder.complete.setChecked(test.isComplete());
+			holder.complete.setChecked(test.isSubmitted());
 			
 			return view;
 		}
@@ -138,6 +138,18 @@ public class CourseActivity extends BaseActivity {
 					});
 					
 					dialog.show();
+				}
+				else if (msg.what == DataManager.MSG_TEST_LIST_UPDATED) {
+					if (msg.arg1 == DataManager.OK) {
+						mAdapter.notifyDataSetChanged();
+					}
+					else {
+						AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+						builder.setTitle("错误");
+						builder.setMessage((String)msg.obj);
+						AlertDialog dialog = builder.create();
+						dialog.show();
+					}
 				}
 			}
 		};
@@ -199,7 +211,7 @@ public class CourseActivity extends BaseActivity {
     	course_desc.setText(test.getDescription());
     	builder.setView(view);
     	
-    	if(test.isComplete()) {
+    	if(test.isSubmitted()) {
     		builder.setPositiveButton("返回", new DialogInterface.OnClickListener() {
     		     @Override
     		     public void onClick(DialogInterface dialog, int which) {

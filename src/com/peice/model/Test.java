@@ -23,9 +23,9 @@ public class Test {
 	String mId;
 	String mName;
 	String mPaperId;
+	String mDescription;
 	int   mLength;
 	char  mType;
-	boolean mIsComplete;
 	boolean mQuestionLoaded;
 	boolean mAutoCheck;
 	boolean mSubmitted;
@@ -67,20 +67,18 @@ public class Test {
 	}
 	
 	public String getDescription() {
-		return Integer.toString(mLength) + "分钟";
+		if (mDescription == null || mDescription.length() <= 0) {
+			return Integer.toString(mLength) + "分钟";
+		}
+		else {
+			return mDescription;
+		}
 	}
 	
 	public String getPaperId() {
 		return mPaperId;
 	}
 	
-	public boolean isComplete() {
-		return mIsComplete;
-	}
-	
-	public void setComplete(boolean b) {
-		mIsComplete = b;
-	}
 	
 	public boolean isQuestionLoaded() {
 		return mQuestionLoaded;
@@ -155,6 +153,10 @@ public class Test {
 		}
 	}
 	
+	public void refreash(JSONObject json) {
+		mPaperId = json.optString("paperid");
+	}
+	
 	/*
 	 * m_test_json.php 
 	输入：projid=<...>&candid=<...>&testid=<...>
@@ -193,6 +195,16 @@ public class Test {
 			mQuestionLoaded = true;
 		}catch(JSONException e) {
 			Log.e("Test", "load questions error:"+e);
+		}
+	}
+	
+	public void update(JSONObject info) {
+		try {
+			String submit = info.getString("submit");
+			mSubmitted = submit.equalsIgnoreCase("YES");
+			mDescription = info.optString("result");
+		} catch (JSONException e) {
+			Log.e("Test", "update info error:" + e);
 		}
 	}
 	

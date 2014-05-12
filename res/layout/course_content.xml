@@ -1,7 +1,12 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
 	<ListView android:id="@+id/course_list"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent">
+	    android:layout_height="0dp"
+	    android:layout_weight="1">
 	    
 	    
 	</ListView>
@@ -11,8 +16,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        style="@style/button"
-       android:layout_marginLeft="-5dp"
-       android:layout_marginRight="-5dp"
+       android:layout_marginLeft="5dp"
+       android:layout_marginRight="5dp"
        android:text="@string/submit"/>
     
-</merge>
+</LinearLayout>

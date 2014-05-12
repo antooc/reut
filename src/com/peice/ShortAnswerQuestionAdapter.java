@@ -8,13 +8,14 @@ import android.widget.TextView;
 
 import com.peice.QuestionAdapter.OnAnswerChanged;
 import com.peice.model.Question;
+import com.peice.model.Test;
 
 public class ShortAnswerQuestionAdapter extends QuestionAdapter{
 	
 	TextView mAnswerView;
 	
-	public ShortAnswerQuestionAdapter(Question tq, OnAnswerChanged onAnswerChanged) {
-		super(tq, onAnswerChanged);
+	public ShortAnswerQuestionAdapter(Test test, Question tq, OnAnswerChanged onAnswerChanged) {
+		super(test, tq, onAnswerChanged);
 	}
 	
 	@Override

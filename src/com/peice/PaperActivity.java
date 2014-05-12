@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -66,6 +67,7 @@ public class PaperActivity extends Activity implements
 	CheckBox     mMark;
 	Handler      mHandler;
 	Date         mBeginTime;
+	ProgressDialog mSubmitProgress;
 	
 	class GotoQuestionRunable implements Runnable{
 		public int nextId;
@@ -266,6 +268,10 @@ public class PaperActivity extends Activity implements
 	}
 	
 	private void onSubmitTest(Message msg) {
+		if (mSubmitProgress != null) {
+			mSubmitProgress.dismiss();
+			mSubmitProgress = null;
+		}
 		mTest.setSubmitted(msg.arg1 == DataManager.OK);
 		//if (msg.arg1 == OK) {
 		//	
@@ -287,6 +293,24 @@ public class PaperActivity extends Activity implements
 	}
 	
 	private void onQueryTest(Message msg) {
+		if (msg.arg1 == DataManager.FAIL) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("错误");
+			builder.setMessage((String)msg.obj);
+			AlertDialog dialog = builder.create();
+			dialog.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss(DialogInterface arg0) {
+					// TODO Auto-generated method stub
+					finish();
+				}
+				
+			});
+			dialog.show();
+			return;
+		}
+		
 		mTest = (Test)msg.obj;
 		if (mTest == null) {
 			Log.e("PapaerAcitivty", "Invalidate Test");
@@ -436,18 +460,6 @@ public class PaperActivity extends Activity implements
 	@Override
 	public void onAnswer(Question tq, int idx) {
 		//mAnswerProgress.setProgress(mPaper.getAnswerCount());
-		Map<String, String> answers = mTest.getAnswers();
-		if (answers == null || answers.size() < mTest.getQuestionCount()) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("错误");
-			builder.setMessage("你尚未完成答题，不能提交！");
-			builder.create().show();
-			return ;
-		}
-		
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
-		
-		DataManager.getInstance().submitTest(mTest, df.format(mBeginTime), mHandler);
 	}
 
 	@Override
@@ -460,7 +472,24 @@ public class PaperActivity extends Activity implements
 	@Override
 	public void submitAnswer() {
 		// TODO submit the answer
+		Map<String, String> answers = mTest.getAnswers();
+		if (answers == null || answers.size() < mTest.getQuestionCount()) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("错误");
+			builder.setMessage("你尚未完成答题，不能提交！");
+			builder.create().show();
+			return ;
+		}
 		
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+		
+		DataManager.getInstance().submitTest(mTest, df.format(mBeginTime), mHandler);
+		
+		//show progress dialog
+		mSubmitProgress = new ProgressDialog(this);
+		mSubmitProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		mSubmitProgress.setMessage("正在提交答案，请耐心等待");
+		mSubmitProgress.show();
 	}
 
 	@Override
