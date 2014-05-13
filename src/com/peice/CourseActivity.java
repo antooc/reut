@@ -155,6 +155,12 @@ public class CourseActivity extends BaseActivity {
 		};
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	DataManager.getInstance().getTestListStates(mHandler);
+    }
+    
     private void onSubmit() {
     	List<Test> tests = getTests();
     	boolean finished = true;

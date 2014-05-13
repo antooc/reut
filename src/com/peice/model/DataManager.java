@@ -142,6 +142,7 @@ public class DataManager {
 				msg.what = MSG_TEST_LIST_UPDATED;
 				msg.arg1 = ok ? OK : FAIL;
 				msg.obj = result;
+				handle.sendMessage(msg);
 			}
 		};
 		
@@ -345,29 +346,32 @@ public class DataManager {
 					public void onStringReceived(String buffer) {
 						//1. 提交成功 {"status":"OK","result":"进交完成！"}
 						//2. 提交失败 {"status":"FAIL","result":"提交失败，不能完成提交！"}
+						String errmsg = "";
+						int istatus = FAIL;
 						try {
 							JSONObject json = new JSONObject(buffer);
 							String status = json.getString("status");
-							int istatus = FAIL;
 							if (status.equalsIgnoreCase("OK")) {
 								istatus = OK;
 							}
-							String errmsg = json.optString("result");
+							errmsg = json.optString("result");
 							
-							Message msg = handle.obtainMessage();
-							msg.what = MSG_SUBMIT_ALL;
-							msg.arg1 = istatus;
-							msg.obj = errmsg;
-							handle.sendMessage(msg);
 						}catch (Exception e) {
 							Log.e("DataManager", "Submit failed:"+e);
 							e.printStackTrace();
+							istatus = FAIL;
+							errmsg = "Submit failed:" + e;
 						}
+						
+						Message msg = handle.obtainMessage();
+						msg.what = MSG_SUBMIT_ALL;
+						msg.arg1 = istatus;
+						msg.obj = errmsg;
+						handle.sendMessage(msg);
 					}
 				};
 				
-				mNetClient.post("json/m_test_submit_json.php", params, reciever);
-		
+				mNetClient.post("json/m_submit_json.php", params, reciever);
 	}
 	
 	public Candidate getCandidate() {

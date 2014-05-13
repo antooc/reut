@@ -40,6 +40,7 @@
 	   android:layout_height="wrap_content"
 	   android:clickable="false"
 	   android:focusable="false"
+	   android:layout_marginTop="6dip"
 	   android:layout_gravity="right"
 	   android:button="@drawable/complete_check_btn" />
 
